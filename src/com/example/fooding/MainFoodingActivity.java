@@ -7,8 +7,6 @@ import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.http.Header;
-import org.apache.http.HttpHost;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.ClientProtocolException;
@@ -36,6 +34,8 @@ import android.widget.Toast;
 public class MainFoodingActivity extends Activity implements OnClickListener {
 	private EditText productNameEditText;
 	private EditText productPriceEditText;
+	
+	final static private String WebServiceUrl = "http://fooding.jit.su/api/products/add";
 	
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -70,7 +70,7 @@ public class MainFoodingActivity extends Activity implements OnClickListener {
     			HttpContext context = new BasicHttpContext();
     			context.setAttribute(ClientContext.COOKIE_STORE, cookieStore);    	
     			
-    			HttpPost httppost = new HttpPost("http://fooding.jit.su/api/products/add");	
+    			HttpPost httppost = new HttpPost(WebServiceUrl);	
     			httppost.setHeader("Cookie", "foodingaccess=1-b8767f0228e22a1d3fe10e12e6d3d656");
 				try {
 					List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
