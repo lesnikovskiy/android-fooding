@@ -9,17 +9,15 @@ import org.apache.http.NameValuePair;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.message.BasicNameValuePair;
 
-import com.example.fooding.R.id;
-
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 
 public class EditProductActivity extends Activity implements OnClickListener {
 	private EditText productNameEditText;
@@ -27,9 +25,14 @@ public class EditProductActivity extends Activity implements OnClickListener {
 	private TextView productIdTextView;
 	private TextView productRevTextView;
 	
-	final static private String WEB_SERVICE_URL = "http://fooding.jit.su/api/products/update";
+	final static private String WEB_SERVICE_URL = "http://fooding.jit.su/api/products/update";	
+	final static private String API_REMOVE_URL = "http://fooding.jit.su/api/products/remove";
+	final static private String TAG = "EditProductActivity";
 	
-	//final static private String TAG = "MainFoodingActivity";
+	final static private String ID = "id";
+	final static private String REV = "rev";
+	final static private String NAME = "name";
+	final static private String PRICE = "price";
 	
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -37,13 +40,10 @@ public class EditProductActivity extends Activity implements OnClickListener {
         setContentView(R.layout.edit_product_layout);
         
         Intent intent = getIntent();
-        String id = intent.getExtras().getString("id");
-        String rev = intent.getExtras().getString("rev");
-        String name = intent.getExtras().getString("name");
-        String price = intent.getExtras().getString("price");
-        
-        View saveButton = this.findViewById(R.id.saveProductButton);
-        saveButton.setOnClickListener(this);
+        String id = intent.getExtras().getString(ID);
+        String rev = intent.getExtras().getString(REV);
+        String name = intent.getExtras().getString(NAME);
+        String price = intent.getExtras().getString(PRICE);      
         
         productIdTextView = (TextView) this.findViewById(R.id.id);
         productRevTextView = (TextView) this.findViewById(R.id.rev);
@@ -61,6 +61,15 @@ public class EditProductActivity extends Activity implements OnClickListener {
         
         if (price != null)
         	productPriceEditText.setText(price);
+        
+        View saveButton = this.findViewById(R.id.saveProductButton);
+        saveButton.setOnClickListener(this);
+        
+        View removeButton = this.findViewById(R.id.removeProductButton);
+        removeButton.setOnClickListener(this);
+        
+        View cancelButton = this.findViewById(R.id.cancelButton);
+        cancelButton.setOnClickListener(this);
     }
 
     @Override
@@ -70,84 +79,61 @@ public class EditProductActivity extends Activity implements OnClickListener {
     }
     
     public void onClick(View v) {
+    	String id = productIdTextView.getText().toString();
+		String rev = productRevTextView.getText().toString();
+    	
     	switch(v.getId()) {
-    		case R.id.saveProductButton:
-    			String id = productIdTextView.getText().toString();
+    		case R.id.cancelButton:
+    			finish();
+    			break;
+    		case R.id.saveProductButton:    			
     			String name = productNameEditText.getText().toString();
-    			String price = productPriceEditText.getText().toString();
-    			String rev = productRevTextView.getText().toString();
+    			String price = productPriceEditText.getText().toString();    			
     			
-    			Toast.makeText(this, "You are about to post: "
-    					+ id + " "
-    					+ rev + " "
-    					+ name + " " + price, Toast.LENGTH_LONG)
-    				.show();
+    			Log.d(TAG, "Sending post request: id="
+    					+ id + "&rev="
+    					+ rev + "&name="
+    					+ name + "&price=" + price);
     			
     			List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
-    			nameValuePairs.add(new BasicNameValuePair("id", id));
-    			nameValuePairs.add(new BasicNameValuePair("rev", rev));
-				nameValuePairs.add(new BasicNameValuePair("name", name));
-				nameValuePairs.add(new BasicNameValuePair("price", price));   		   	
+    			nameValuePairs.add(new BasicNameValuePair(ID, id));
+    			nameValuePairs.add(new BasicNameValuePair(REV, rev));
+				nameValuePairs.add(new BasicNameValuePair(NAME, name));
+				nameValuePairs.add(new BasicNameValuePair(PRICE, price));   		   	
     			
 				try {
-					String response = HttpUtil.post(WEB_SERVICE_URL, nameValuePairs);
-					
-					Toast.makeText(this, response, Toast.LENGTH_LONG).show();
+					String response = HttpUtil.post(WEB_SERVICE_URL, nameValuePairs);					
+					Log.d(TAG, "Response from server: " + response);
+					finish();
 				} catch (UnsupportedEncodingException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-					Toast.makeText(this, e.getMessage(), Toast.LENGTH_LONG).show();
+					Log.e(TAG, e.getMessage());
 				} catch (ClientProtocolException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-					Toast.makeText(this, e.getMessage(), Toast.LENGTH_LONG).show();
+					Log.e(TAG, e.getMessage());
 				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-					Toast.makeText(this, e.getMessage(), Toast.LENGTH_LONG).show();
+					Log.e(TAG, e.getMessage());
 				}
 				
 				break;
+    		case R.id.removeProductButton:
+    			Log.d(TAG, "Sending post request: id=" + id + "&rev=" + rev);
+    			
+    			List<NameValuePair> pairs = new ArrayList<NameValuePair>();
+    			pairs.add(new BasicNameValuePair(ID, id));
+    			pairs.add(new BasicNameValuePair(REV, rev));
+    			
+    			try {
+    				String response = HttpUtil.post(API_REMOVE_URL, pairs);
+    				Log.d(TAG, "Response from server: " + response);
+    				finish();
+    			} catch (UnsupportedEncodingException e) {
+					Log.e(TAG, e.getMessage());
+				} catch (ClientProtocolException e) {
+					Log.e(TAG, e.getMessage());
+				} catch (IOException e) {
+					Log.e(TAG, e.getMessage());
+				}
+    			
+    			break;
     	}
     }
-
-//    private String getFromUrl(String url) {
-//    	String result = "";
-//    	
-//    	HttpClient client = new DefaultHttpClient();
-//    	
-//    	CookieStore cookieStore = new BasicCookieStore();
-//		HttpContext context = new BasicHttpContext();
-//		context.setAttribute(ClientContext.COOKIE_STORE, cookieStore);
-//		
-//		HttpGet httpget = new HttpGet(url);
-//		httpget.addHeader("Cookie", "foodingaccess=1-b8767f0228e22a1d3fe10e12e6d3d656");
-//		
-//		try {
-//			HttpResponse httpResponse = client.execute(httpget);
-//			
-//			String line = "";
-//			StringBuilder sb = new StringBuilder();
-//			BufferedReader reader = new BufferedReader(
-//					new InputStreamReader(httpResponse.getEntity().getContent()));
-//			
-//			while ((line = reader.readLine()) != null) {
-//				sb.append(line);
-//			}
-//			
-//			reader.close();
-//			
-//			result = sb.toString();
-//		} catch (ClientProtocolException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//			Log.e(TAG, e.getMessage() + "\n" + e.getStackTrace());
-//		} catch (IOException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//			Log.e(TAG, e.getMessage() + "\n" + e.getStackTrace());
-//		}
-//
-//		return result;
-//    }
 }

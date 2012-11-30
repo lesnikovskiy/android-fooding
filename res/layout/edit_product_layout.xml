@@ -14,22 +14,41 @@
 	    android:layout_width="wrap_content"
 	    android:layout_height="wrap_content"
 	    android:visibility="gone"
-	    android:id="@+id/rev"/>
+	    android:id="@+id/rev" />
 
     <EditText
         android:id="@+id/productName"
         android:hint="@string/product_name_hint"
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content" />
     <EditText
         android:id="@+id/productPrice"
         android:hint="@string/product_price_hint"
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content"/>
-    <Button
-        android:id="@+id/saveProductButton"
-        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:text="@string/add_product_button" />
-
+        android:digits="0123456789."
+        android:inputType="numberSigned" />
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content">
+	    <Button
+	        android:id="@+id/saveProductButton"
+	        android:layout_width="0dip"
+	        android:layout_height="wrap_content"
+	        android:layout_weight="1"
+	        android:text="@string/add_product_button" />
+	    <Button
+	        android:id="@+id/removeProductButton"
+	        android:layout_width="0dip"
+	        android:layout_height="wrap_content"
+	        android:layout_weight="1"
+	        android:text="@string/remove_product_button" />
+	    <Button
+	        android:id="@+id/cancelButton"
+	        android:layout_width="0dip"
+	        android:layout_height="wrap_content"
+	        android:layout_weight="1"
+	        android:text="@string/cancel_button" />
+    </LinearLayout>
 </LinearLayout>

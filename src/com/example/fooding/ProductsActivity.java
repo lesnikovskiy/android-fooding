@@ -22,6 +22,11 @@ public class ProductsActivity extends Activity  {
 	private final static String WEB_SERVICE_URL = "http://fooding.jit.su/api/products/list/";
 	private final static String TAG = "ProductsActivity";
 	
+	private final static String ID = "id";
+	private final static String REV = "rev";
+	private final static String NAME = "name";
+	private final static String PRICE = "price";
+	
 	private ListView listView;
 	private ProductArrayAdapter productsArrayAdapter;
 	
@@ -56,13 +61,13 @@ public class ProductsActivity extends Activity  {
 						
 						Intent intent = new Intent(v.getContext(), EditProductActivity.class);
 						if (idText != null)
-							intent.putExtra("id", idText.getText().toString());						
+							intent.putExtra(ID, idText.getText().toString());						
 						if(revText != null)
-							intent.putExtra("rev", revText.getText().toString());
+							intent.putExtra(REV, revText.getText().toString());
 						if(nameText != null)
-							intent.putExtra("name", nameText.getText().toString());
+							intent.putExtra(NAME, nameText.getText().toString());
 						if(priceText != null)
-							intent.putExtra("price", priceText.getText().toString());
+							intent.putExtra(PRICE, priceText.getText().toString());
 						startActivity(intent);
 					}
 				});
