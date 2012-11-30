@@ -2,10 +2,12 @@
 
     <string name="app_name">Fooding</string>
     <string name="menu_settings">Settings</string>
-    <string name="title_activity_main_fooding">Fooding</string>
+    <string name="product_name">Fooding</string>
     
     <string name="product_name_hint">Enter product name</string>
     <string name="product_price_hint">Enter product price</string>
     <string name="add_product_button">Save Product</string>
+    
+    <string name="edit_product_label">Edit Product</string>
 
 </resources>
