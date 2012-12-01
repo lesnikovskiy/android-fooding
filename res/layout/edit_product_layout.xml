@@ -3,6 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
+    android:weightSum="1.2"
+    android:padding="5dip"
     android:orientation="vertical">
     
     <TextView 
@@ -32,12 +34,18 @@
         android:orientation="horizontal"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content">
+        <Button 
+            android:id="@+id/addProductButton"
+            android:layout_width="0dip"
+	        android:layout_height="wrap_content"
+	        android:layout_weight="1"
+	        android:text="@string/add_product_button" />
 	    <Button
 	        android:id="@+id/saveProductButton"
 	        android:layout_width="0dip"
 	        android:layout_height="wrap_content"
 	        android:layout_weight="1"
-	        android:text="@string/add_product_button" />
+	        android:text="@string/save_product_button" />
 	    <Button
 	        android:id="@+id/removeProductButton"
 	        android:layout_width="0dip"
