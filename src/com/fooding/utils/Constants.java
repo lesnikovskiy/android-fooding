@@ -13,4 +13,7 @@ public final class Constants {
 	
 	public final static String EDIT_FLAG = "edit_flag";
 	public final static String ADD_FLAG = "add_flag";
+	
+	public final static int EDIT_PRODUCTS_RESULT = 100;
+	public final static int ADD_PRODUCTS_RESULT = 200;
 }

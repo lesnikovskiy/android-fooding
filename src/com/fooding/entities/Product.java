@@ -1,6 +1,7 @@
 package com.fooding.entities;
 
 public class Product {
+	private long productid;
 	private String id;
 	private String rev;
 	private String name;
@@ -11,6 +12,18 @@ public class Product {
 		this.rev = rev;
 		this.name = name;
 		this.price = price;
+	}
+	
+	public Product(long productid, String id, String rev, String name, String price) {
+		this.productid = productid;
+		this.id = id;
+		this.rev = rev;
+		this.name = name;
+		this.price = price;
+	}
+	
+	public long getProductId() {
+		return this.productid;
 	}
 	
 	public String getId() {

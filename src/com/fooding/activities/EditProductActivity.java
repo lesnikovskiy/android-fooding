@@ -87,6 +87,7 @@ public class EditProductActivity extends Activity implements OnClickListener {
     	
     	switch(v.getId()) {
     		case R.id.cancelButton:
+    			EditProductActivity.this.setResult(RESULT_CANCELED);
     			finish();
     			break;
     		case R.id.addProductButton:
@@ -102,13 +103,20 @@ public class EditProductActivity extends Activity implements OnClickListener {
     			try {
 					String response = HttpUtil.post(Constants.API_ADD_PRODUCT_URL, pairs);					
 					Log.d(TAG, "Response from server: " + response);
+					EditProductActivity.this.setResult(RESULT_OK);
 					finish();
 				} catch (UnsupportedEncodingException e) {
 					Log.e(TAG, e.getMessage());
+					EditProductActivity.this.setResult(RESULT_CANCELED);
+					finish();
 				} catch (ClientProtocolException e) {
 					Log.e(TAG, e.getMessage());
+					EditProductActivity.this.setResult(RESULT_CANCELED);
+					finish();
 				} catch (IOException e) {
 					Log.e(TAG, e.getMessage());
+					EditProductActivity.this.setResult(RESULT_CANCELED);
+					finish();
 				}
     			
     			break;
@@ -130,13 +138,20 @@ public class EditProductActivity extends Activity implements OnClickListener {
 				try {
 					String response = HttpUtil.post(Constants.API_UPDATE_PRODUCT_URL, nameValuePairs);					
 					Log.d(TAG, "Response from server: " + response);
+					EditProductActivity.this.setResult(RESULT_OK);
 					finish();
 				} catch (UnsupportedEncodingException e) {
 					Log.e(TAG, e.getMessage());
+					EditProductActivity.this.setResult(RESULT_CANCELED);
+					finish();
 				} catch (ClientProtocolException e) {
 					Log.e(TAG, e.getMessage());
+					EditProductActivity.this.setResult(RESULT_CANCELED);
+					finish();
 				} catch (IOException e) {
 					Log.e(TAG, e.getMessage());
+					EditProductActivity.this.setResult(RESULT_CANCELED);
+					finish();
 				}
 				
 				break;
@@ -150,13 +165,20 @@ public class EditProductActivity extends Activity implements OnClickListener {
     			try {
     				String response = HttpUtil.post(Constants.API_REMOVE_PRODUCT_URL, deletePairs);
     				Log.d(TAG, "Response from server: " + response);
+    				EditProductActivity.this.setResult(RESULT_OK);
     				finish();
     			} catch (UnsupportedEncodingException e) {
 					Log.e(TAG, e.getMessage());
+					EditProductActivity.this.setResult(RESULT_CANCELED);
+					finish();
 				} catch (ClientProtocolException e) {
 					Log.e(TAG, e.getMessage());
+					EditProductActivity.this.setResult(RESULT_CANCELED);
+					finish();
 				} catch (IOException e) {
 					Log.e(TAG, e.getMessage());
+					EditProductActivity.this.setResult(RESULT_CANCELED);
+					finish();
 				}
     			
     			break;
