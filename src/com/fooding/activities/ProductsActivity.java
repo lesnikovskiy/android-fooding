@@ -1,6 +1,16 @@
 package com.fooding.activities;
 
+import static com.fooding.utils.Constants.ADD_FLAG;
+import static com.fooding.utils.Constants.ADD_PRODUCTS_RESULT;
+import static com.fooding.utils.Constants.EDIT_FLAG;
+import static com.fooding.utils.Constants.EDIT_PRODUCTS_RESULT;
+import static com.fooding.utils.Constants.ID;
+import static com.fooding.utils.Constants.NAME;
+import static com.fooding.utils.Constants.PRICE;
+import static com.fooding.utils.Constants.REV;
+
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.http.client.ClientProtocolException;
@@ -8,7 +18,6 @@ import org.apache.http.client.ClientProtocolException;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -17,14 +26,11 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.fooding.adapters.ProductArrayAdapter;
+import com.fooding.contracts.WebApiContract;
 import com.fooding.entities.Product;
-import com.fooding.entities.ProductSet;
-import com.fooding.utils.Constants;
-import com.fooding.utils.HttpUtil;
-import com.google.gson.Gson;
+import com.fooding.webapi.ProductWebApi;
 
 public class ProductsActivity extends Activity implements OnItemClickListener  {
 	private final static String TAG = "ProductsActivity";
@@ -39,7 +45,7 @@ public class ProductsActivity extends Activity implements OnItemClickListener  {
 		
 		setContentView(R.layout.products_layout);
 		
-		products = getProductList().getProducts();
+		products = getProductList();
 		if (products != null && products.size() > 0) {
 			listView = (ListView) findViewById(R.id.products);
 			productsArrayAdapter = new ProductArrayAdapter(this, R.layout.product_list_item, products);
@@ -60,9 +66,9 @@ public class ProductsActivity extends Activity implements OnItemClickListener  {
 		switch(item.getItemId()) {
 			case R.id.menu_new_product:
 				Intent intent = new Intent(this, EditProductActivity.class);
-				intent.putExtra(Constants.ADD_FLAG, true);
-				intent.putExtra(Constants.EDIT_FLAG, false);
-				startActivityForResult(intent, Constants.ADD_PRODUCTS_RESULT);				
+				intent.putExtra(ADD_FLAG, true);
+				intent.putExtra(EDIT_FLAG, false);
+				startActivityForResult(intent, ADD_PRODUCTS_RESULT);				
 				return true;
 			case R.id.menu_settings:
 				Log.d(TAG, "You selected menu settings");
@@ -80,13 +86,19 @@ public class ProductsActivity extends Activity implements OnItemClickListener  {
 		Log.d(TAG, "resultCode: " + resultCode);
 		
 		switch(requestCode) {
-			case Constants.EDIT_PRODUCTS_RESULT:
-			case Constants.ADD_PRODUCTS_RESULT:
+			case EDIT_PRODUCTS_RESULT:
+			case ADD_PRODUCTS_RESULT:
 				if (resultCode == Activity.RESULT_OK) {
-					products = getProductList().getProducts();
+					products.clear();
+					products = getProductList();
+					Log.w(TAG, 
+							String.format("onActivityResult getProductList returned %s", 
+									products.toString()));
 					if (products != null && products.size() > 0) {
-						products.clear();
-						productsArrayAdapter.notifyDataSetChanged();
+						productsArrayAdapter = 
+								new ProductArrayAdapter(this, R.layout.product_list_item, products);
+						listView.setAdapter(productsArrayAdapter);
+						listView.setOnItemClickListener(this);
 					}
 				}
 				break;
@@ -101,51 +113,38 @@ public class ProductsActivity extends Activity implements OnItemClickListener  {
 		TextView priceText = (TextView) v.findViewById(R.id.price);
 		
 		Intent intent = new Intent(v.getContext(), EditProductActivity.class);
-		intent.putExtra(Constants.EDIT_FLAG, true);
-		intent.putExtra(Constants.ADD_FLAG, false);
+		intent.putExtra(EDIT_FLAG, true);
+		intent.putExtra(ADD_FLAG, false);
 		if (idText != null)
-			intent.putExtra(Constants.ID, idText.getText().toString());						
+			intent.putExtra(ID, idText.getText().toString());						
 		if(revText != null)
-			intent.putExtra(Constants.REV, revText.getText().toString());
+			intent.putExtra(REV, revText.getText().toString());
 		if(nameText != null)
-			intent.putExtra(Constants.NAME, nameText.getText().toString());
+			intent.putExtra(NAME, nameText.getText().toString());
 		if(priceText != null)
-			intent.putExtra(Constants.PRICE, priceText.getText().toString());
+			intent.putExtra(PRICE, priceText.getText().toString());
 		
-		startActivityForResult(intent, Constants.EDIT_PRODUCTS_RESULT);
+		startActivityForResult(intent, EDIT_PRODUCTS_RESULT);
 	}
 	
-	private ProductSet getProductList() {
-		ProductSet products = null;
-		try {
-			Log.d(TAG, "GET " + Constants.API_GET_PRODUCT_LIST);
-			
-			String json = HttpUtil.get(Constants.API_GET_PRODUCT_LIST);
-			
-			if (TextUtils.isEmpty(json)) {
-				Log.e(TAG, "json is null or empty");
-				return products;
-			}
-			
-			Log.d(TAG, "Response from server: " + json);
-			
-			Gson gson = new Gson();
-			
-			products = gson.fromJson(json, ProductSet.class);						
+	private List<Product> getProductList() {
+		List<Product> products = new ArrayList<Product>();
+		try {	
+			WebApiContract<Product, String> webApi = new ProductWebApi();
+			products = webApi.getlist();						
 		} catch (ClientProtocolException e) {
-			String errorMessage = e.getMessage() + "\n" + e.getStackTrace().toString();
+			String errorMessage = "ClientProtocolException: " + e.getMessage() + e.getStackTrace().toString();
 			Log.e(TAG, errorMessage);
-			Toast.makeText(this, errorMessage, Toast.LENGTH_LONG).show();	
 		} catch (IOException e) {
-			String errorMessage = e.getMessage() + "\n" + e.getStackTrace().toString();
+			String errorMessage = "IOException: " + e.getMessage() + e.getStackTrace().toString();
 			Log.e(TAG, errorMessage);
-			Toast.makeText(this, errorMessage, Toast.LENGTH_LONG).show();
 		}
 		catch (Exception e) {
-			String errorMessage = e.getMessage() + "\n" + e.getStackTrace().toString();
+			String errorMessage = "Exception: " + e.getMessage() + e.getStackTrace().toString();
 			Log.e(TAG, errorMessage);
-			Toast.makeText(this, errorMessage, Toast.LENGTH_LONG).show();
 		}
+		
+		Log.d(TAG, "getProductList returned: " + products.toString());
 		
 		return products;
 	}

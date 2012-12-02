@@ -1,10 +1,10 @@
-package com.fooding.adapters;
+package com.fooding.contracts;
 
 import java.util.List;
 
 import com.fooding.entities.Product;
 
-public interface ProductCrudContract {
+public interface ProductDbContract extends DatabaseContract {
 	List<Product> getProducts();	
 	boolean insertProduct(Product product);
 	boolean updateProduct(Product product);

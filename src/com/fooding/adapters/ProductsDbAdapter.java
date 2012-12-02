@@ -1,5 +1,20 @@
 package com.fooding.adapters;
 
+import static com.fooding.utils.DbConsts.COLUMN_ID;
+import static com.fooding.utils.DbConsts.COLUMN_NAME;
+import static com.fooding.utils.DbConsts.COLUMN_PRICE;
+import static com.fooding.utils.DbConsts.COLUMN_PROD_ID;
+import static com.fooding.utils.DbConsts.COLUMN_REV;
+import static com.fooding.utils.DbConsts.CREATE_CMD;
+import static com.fooding.utils.DbConsts.DB_NAME;
+import static com.fooding.utils.DbConsts.DB_VERSION;
+import static com.fooding.utils.DbConsts.DROP_CMD;
+import static com.fooding.utils.DbConsts.ID;
+import static com.fooding.utils.DbConsts.NAME;
+import static com.fooding.utils.DbConsts.PRICE;
+import static com.fooding.utils.DbConsts.PRODUCTID;
+import static com.fooding.utils.DbConsts.REV;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,17 +27,17 @@ import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
+import com.fooding.contracts.ProductDbContract;
 import com.fooding.entities.Product;
-import com.fooding.utils.DbConsts;
 
-public class ProductsDbAdapter implements ProductCrudContract {
+public class ProductsDbAdapter implements ProductDbContract {
 	static final private String TAG = "ProductsDbAdapter";
 	
 	private ProductsOpenHelper openHelper;
 	private SQLiteDatabase database;
 	
 	public ProductsDbAdapter(Context context) {
-		openHelper = new ProductsOpenHelper(context, DbConsts.DB_NAME, null, DbConsts.DB_VERSION);
+		openHelper = new ProductsOpenHelper(context, DB_NAME, null, DB_VERSION);
 	}
 	
 	public void open() throws SQLiteException {
@@ -41,18 +56,17 @@ public class ProductsDbAdapter implements ProductCrudContract {
 	public List<Product> getProducts() {
 		List<Product> products = new ArrayList<Product>();
 		
-		Cursor c = database.query(DbConsts.DB_NAME, 
-				new String[] {DbConsts.PRODUCTID, DbConsts.ID, 
-					DbConsts.REV, DbConsts.NAME, DbConsts.PRICE}, 
+		Cursor c = database.query(DB_NAME, 
+				new String[] {PRODUCTID, ID, REV, NAME, PRICE}, 
 				null, null, null, null, null);
 		
 		if (c.moveToFirst() && c.getCount() > 0) {
 			do {
-				long productId = c.getLong(DbConsts.COLUMN_PROD_ID);
-				String id = c.getString(DbConsts.COLUMN_ID);
-				String rev = c.getString(DbConsts.COLUMN_REV);
-				String name = c.getString(DbConsts.COLUMN_NAME);
-				String price = c.getString(DbConsts.COLUMN_PRICE);
+				long productId = c.getLong(COLUMN_PROD_ID);
+				String id = c.getString(COLUMN_ID);
+				String rev = c.getString(COLUMN_REV);
+				String name = c.getString(COLUMN_NAME);
+				String price = c.getString(COLUMN_PRICE);
 				
 				Product p = new Product(productId, id, rev, name, price);
 				products.add(p);
@@ -64,12 +78,12 @@ public class ProductsDbAdapter implements ProductCrudContract {
 
 	public boolean insertProduct(Product product) {
 		ContentValues values = new ContentValues();
-		values.put(DbConsts.ID, product.getId());
-		values.put(DbConsts.REV, product.getRev());
-		values.put(DbConsts.NAME, product.getName());
-		values.put(DbConsts.PRICE, product.getPrice());
+		values.put(ID, product.getId());
+		values.put(REV, product.getRev());
+		values.put(NAME, product.getName());
+		values.put(PRICE, product.getPrice());
 		
-		return database.insert(DbConsts.DB_NAME, null, values) > 0;
+		return database.insert(DB_NAME, null, values) > 0;
 	}
 
 	public boolean updateProduct(Product product) {
@@ -78,23 +92,23 @@ public class ProductsDbAdapter implements ProductCrudContract {
 			return insertProduct(product);
 		
 		ContentValues values = new ContentValues();
-		values.put(DbConsts.ID, product.getId());
-		values.put(DbConsts.REV, product.getRev());
-		values.put(DbConsts.NAME, product.getName());
-		values.put(DbConsts.PRICE, product.getPrice());
+		values.put(ID, product.getId());
+		values.put(REV, product.getRev());
+		values.put(NAME, product.getName());
+		values.put(PRICE, product.getPrice());
 		
-		String whereClause = String.format("%s=%s", DbConsts.PRODUCTID, productId);
+		String whereClause = String.format("%s=%s", PRODUCTID, productId);
 		
-		return database.update(DbConsts.DB_NAME, values, whereClause, null) > 0;
+		return database.update(DB_NAME, values, whereClause, null) > 0;
 	}
 
 	public boolean deleteProduct(int productId) {
 		if (productId <= 0)
 			return false;
 		
-		String whereClause = String.format("%s=%s", DbConsts.PRODUCTID, productId);
+		String whereClause = String.format("%s=%s", PRODUCTID, productId);
 		
-		return database.delete(DbConsts.DB_NAME, whereClause, null) > 0;
+		return database.delete(DB_NAME, whereClause, null) > 0;
 	}
 	
 	private static class ProductsOpenHelper extends SQLiteOpenHelper {
@@ -107,14 +121,14 @@ public class ProductsDbAdapter implements ProductCrudContract {
 
 		@Override
 		public void onCreate(SQLiteDatabase db) {
-			Log.d(TAG, "executes sql command: " + DbConsts.CREATE_CMD);
-			db.execSQL(DbConsts.CREATE_CMD);
+			Log.d(TAG, "executes sql command: " + CREATE_CMD);
+			db.execSQL(CREATE_CMD);
 		}
 
 		@Override
 		public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-			Log.d(TAG, "executes sql command: " + DbConsts.DROP_CMD);
-			db.execSQL(DbConsts.DROP_CMD);
+			Log.d(TAG, "executes sql command: " + DROP_CMD);
+			db.execSQL(DROP_CMD);
 		}
 		
 	}
