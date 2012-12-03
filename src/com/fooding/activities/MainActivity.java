@@ -6,12 +6,16 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.LinearLayout;
 
 public class MainActivity extends Activity implements OnClickListener {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
+		super.onCreate(savedInstanceState);		
 		setContentView(R.layout.main_layout);
+		
+		LinearLayout ll = (LinearLayout) findViewById(R.id.main_linear_layout);
+		ll.setBackgroundResource(R.drawable.the_dirt);
 		
 		Button productsButton = (Button) findViewById(R.id.products_button);
 		productsButton.setOnClickListener(this);

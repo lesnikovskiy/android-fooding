@@ -5,8 +5,12 @@
     android:layout_height="fill_parent"
     android:weightSum="1.2"
     android:padding="5dip"
-    android:orientation="vertical">
-    
+    android:orientation="vertical">    
+    <TextView 
+	    android:layout_width="wrap_content"
+	    android:layout_height="wrap_content"
+	    android:visibility="gone"
+	    android:id="@+id/product_id" />
     <TextView 
 	    android:layout_width="wrap_content"
 	    android:layout_height="wrap_content"

@@ -13,6 +13,7 @@ import static com.fooding.utils.DbConsts.ID;
 import static com.fooding.utils.DbConsts.NAME;
 import static com.fooding.utils.DbConsts.PRICE;
 import static com.fooding.utils.DbConsts.PRODUCTID;
+import static com.fooding.utils.DbConsts.PRODUCTS_TABLE;
 import static com.fooding.utils.DbConsts.REV;
 
 import java.util.ArrayList;
@@ -56,7 +57,7 @@ public class ProductsDbAdapter implements ProductDbContract {
 	public List<Product> getProducts() {
 		List<Product> products = new ArrayList<Product>();
 		
-		Cursor c = database.query(DB_NAME, 
+		Cursor c = database.query(PRODUCTS_TABLE, 
 				new String[] {PRODUCTID, ID, REV, NAME, PRICE}, 
 				null, null, null, null, null);
 		
@@ -83,7 +84,7 @@ public class ProductsDbAdapter implements ProductDbContract {
 		values.put(NAME, product.getName());
 		values.put(PRICE, product.getPrice());
 		
-		return database.insert(DB_NAME, null, values) > 0;
+		return database.insert(PRODUCTS_TABLE, null, values) > 0;
 	}
 
 	public boolean updateProduct(Product product) {
@@ -99,16 +100,19 @@ public class ProductsDbAdapter implements ProductDbContract {
 		
 		String whereClause = String.format("%s=%s", PRODUCTID, productId);
 		
-		return database.update(DB_NAME, values, whereClause, null) > 0;
+		return database.update(PRODUCTS_TABLE, values, whereClause, null) > 0;
 	}
 
-	public boolean deleteProduct(int productId) {
+	public boolean deleteProduct(long productId) {
+		Log.d(TAG, "deleteProduct called");
+		Log.d(TAG, String.format("productId = %s", productId));
 		if (productId <= 0)
 			return false;
 		
 		String whereClause = String.format("%s=%s", PRODUCTID, productId);
+		Log.d(TAG, String.format("whereClause = %s", whereClause));
 		
-		return database.delete(DB_NAME, whereClause, null) > 0;
+		return database.delete(PRODUCTS_TABLE, whereClause, null) > 0;
 	}
 	
 	private static class ProductsOpenHelper extends SQLiteOpenHelper {
@@ -129,7 +133,6 @@ public class ProductsDbAdapter implements ProductDbContract {
 		public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 			Log.d(TAG, "executes sql command: " + DROP_CMD);
 			db.execSQL(DROP_CMD);
-		}
-		
+		}		
 	}
 }

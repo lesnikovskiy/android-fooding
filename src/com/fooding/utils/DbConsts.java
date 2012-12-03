@@ -4,6 +4,8 @@ public final class DbConsts {
 	static final public String DB_NAME = "fooding.db";
 	static final public int DB_VERSION = 1;
 	
+	static final public String PRODUCTS_TABLE = "products";
+	
 	static final public String PRODUCTID = "productid";
 	static final public String ID = "id";
 	static final public String REV = "rev";

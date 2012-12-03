@@ -5,6 +5,7 @@ import static com.fooding.utils.Constants.EDIT_FLAG;
 import static com.fooding.utils.Constants.ID;
 import static com.fooding.utils.Constants.NAME;
 import static com.fooding.utils.Constants.PRICE;
+import static com.fooding.utils.Constants.PRODUCT_ID;
 import static com.fooding.utils.Constants.REV;
 
 import java.io.IOException;
@@ -14,6 +15,7 @@ import org.apache.http.client.ClientProtocolException;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.database.sqlite.SQLiteException;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -21,17 +23,21 @@ import android.view.View.OnClickListener;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.fooding.adapters.ProductsDbAdapter;
+import com.fooding.contracts.ProductDbContract;
 import com.fooding.contracts.WebApiContract;
 import com.fooding.entities.Product;
 import com.fooding.webapi.ProductWebApi;
 
-public class EditProductActivity extends Activity implements OnClickListener {
-	private EditText productNameEditText;
-	private EditText productPriceEditText;
-	private TextView productIdTextView;
-	private TextView productRevTextView;
+public class EditProductActivity extends Activity implements OnClickListener {	
+	private TextView productidTextView;
+	private TextView idTextView;
+	private TextView revTextView;
+	private EditText nameEditText;
+	private EditText priceEditText;	
 	
 	private WebApiContract<Product, String> webApi;
+	private ProductDbContract db;
 	
 	final static private String TAG = "EditProductActivity";
 	
@@ -40,12 +46,20 @@ public class EditProductActivity extends Activity implements OnClickListener {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.edit_product_layout);
         
-        productIdTextView = (TextView) this.findViewById(R.id.id);
-        productRevTextView = (TextView) this.findViewById(R.id.rev);
-        productNameEditText = (EditText) this.findViewById(R.id.productName);
-        productPriceEditText = (EditText) this.findViewById(R.id.productPrice);
+        productidTextView = (TextView) this.findViewById(R.id.product_id);
+        idTextView = (TextView) this.findViewById(R.id.id);
+        revTextView = (TextView) this.findViewById(R.id.rev);
+        nameEditText = (EditText) this.findViewById(R.id.productName);
+        priceEditText = (EditText) this.findViewById(R.id.productPrice);
         
         webApi = new ProductWebApi();
+        db = new ProductsDbAdapter(this);
+        
+        try {
+        	db.open();
+        } catch (SQLiteException e) {
+        	Log.e(TAG, e.getMessage());
+        }
         
         Intent intent = getIntent();
         boolean editFlag = intent.getExtras().getBoolean(EDIT_FLAG);
@@ -56,23 +70,26 @@ public class EditProductActivity extends Activity implements OnClickListener {
         View removeButton = this.findViewById(R.id.removeProductButton);
         
         if (editFlag) {
+        	String productid = intent.getExtras().getString(PRODUCT_ID);
 	        String id = intent.getExtras().getString(ID);
 	        String rev = intent.getExtras().getString(REV);
 	        String name = intent.getExtras().getString(NAME);
 	        String price = intent.getExtras().getString(PRICE);        
-        
+	        
+	        if (productid != null)
+	        	productidTextView.setText(productid);
+	        
 	        if (id != null)
-	        	productIdTextView.setText(id);
+	        	idTextView.setText(id);
 	        
 	        if (rev != null)
-	        	productRevTextView.setText(rev);
+	        	revTextView.setText(rev);
 	        
 	        if (name != null)
-	        	productNameEditText.setText(name);
+	        	nameEditText.setText(name);
 	        
 	        if (price != null)
-	        	productPriceEditText.setText(price);
-	        
+	        	priceEditText.setText(price);	        
 	        
 	        addButton.setVisibility(View.GONE);	        
 	        saveButton.setOnClickListener(this);	        
@@ -89,9 +106,15 @@ public class EditProductActivity extends Activity implements OnClickListener {
         cancelButton.setOnClickListener(this);
     }
     
+    @Override
+    protected void onDestroy() {
+    	db.close();
+    	super.onDestroy();
+    }
+    
     public void onClick(View v) {
-    	String id = productIdTextView.getText().toString();
-		String rev = productRevTextView.getText().toString();
+    	String id = idTextView.getText().toString();
+		String rev = revTextView.getText().toString();
     	
     	switch(v.getId()) {
     		case R.id.cancelButton:
@@ -99,14 +122,18 @@ public class EditProductActivity extends Activity implements OnClickListener {
     			finish();
     			break;
     		case R.id.addProductButton:
-    			String newProductName = productNameEditText.getText().toString();
-    			String newProductPrice = productPriceEditText.getText().toString();
+    			String newProductName = nameEditText.getText().toString();
+    			String newProductPrice = priceEditText.getText().toString();
+    			
+    			Product newProduct = new Product(null, null, newProductName, newProductPrice);   			
     			
     			Log.d(TAG, 
     					String.format("-X POST -d name: name=%s&price=%s", newProductName, newProductPrice));
     			
     			try {
-					String response = webApi.post(new Product(null, null, newProductName, newProductPrice));				
+    				db.insertProduct(newProduct);
+    				
+					String response = webApi.post(newProduct);				
 					Log.d(TAG, String.format("Response from server: %s", response));
 					EditProductActivity.this.setResult(RESULT_OK);
 					finish();
@@ -129,14 +156,26 @@ public class EditProductActivity extends Activity implements OnClickListener {
 				}
     			
     			break;
-    		case R.id.saveProductButton:    			
-    			String name = productNameEditText.getText().toString();
-    			String price = productPriceEditText.getText().toString();    			
+    		case R.id.saveProductButton:   
+    			String productid = productidTextView.getText().toString();
+    			String name = nameEditText.getText().toString();
+    			String price = priceEditText.getText().toString();    
+    			
+    			long pid = 0;
+    			try {
+    				pid = Long.parseLong(productid);
+    			} catch (NumberFormatException e) {
+    				Log.e(TAG, String.format("NumberFormatException: %s", e.getMessage()));
+    			}
+    			
+    			Product udpProduct = new Product(pid, id, rev, name, price);
     			
     			Log.d(TAG, 
     					String.format("-X PUT -d id: id=%s&rev=%s&name=%s&price=%s", id, rev, name, price));    			
 				try {
-					String response = webApi.put(new Product(id, rev, name, price));				
+					db.updateProduct(udpProduct);
+					
+					String response = webApi.put(udpProduct);				
 					Log.d(TAG, String.format("Response from server: %s", response));
 					EditProductActivity.this.setResult(RESULT_OK);
 					finish();
@@ -159,10 +198,20 @@ public class EditProductActivity extends Activity implements OnClickListener {
 				}
 				
 				break;
-    		case R.id.removeProductButton:
+    		case R.id.removeProductButton:    			
+    			long prodId = 0;
+    			try {
+    				prodId = Long.parseLong(productidTextView.getText().toString());
+    			} catch (NumberFormatException e) {
+    				Log.e(TAG, String.format("NumberFormatException: %s", e.getMessage()));
+    			}
+    			
     			Log.d(TAG, String.format("-X DELETE -d id=%s&rev=%s", id, rev));
+    			Product delProduct = new Product(prodId, id, rev, null, null);
     			
     			try {
+    				db.deleteProduct(delProduct.getProductId());
+    				
     				String response = webApi.delete(new Product(id, rev, null, null));
     				Log.d(TAG, "Response from server: " + response);
     				EditProductActivity.this.setResult(RESULT_OK);

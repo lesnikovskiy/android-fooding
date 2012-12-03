@@ -8,5 +8,5 @@ public interface ProductDbContract extends DatabaseContract {
 	List<Product> getProducts();	
 	boolean insertProduct(Product product);
 	boolean updateProduct(Product product);
-	boolean deleteProduct(int productId);	
+	boolean deleteProduct(long productId);	
 }

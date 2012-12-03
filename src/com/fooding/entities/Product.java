@@ -41,4 +41,10 @@ public class Product {
 	public String getPrice() {
 		return this.price;
 	}
+	
+	@Override
+	public String toString() {
+		return String.format("[productid: %s, id: %s, rev: %s, name: %s, price: %s]", 
+				getProductId(), getId(), getRev(), getName(), getPrice());
+	}
 }

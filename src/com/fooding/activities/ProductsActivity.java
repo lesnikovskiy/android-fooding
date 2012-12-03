@@ -7,6 +7,7 @@ import static com.fooding.utils.Constants.EDIT_PRODUCTS_RESULT;
 import static com.fooding.utils.Constants.ID;
 import static com.fooding.utils.Constants.NAME;
 import static com.fooding.utils.Constants.PRICE;
+import static com.fooding.utils.Constants.PRODUCT_ID;
 import static com.fooding.utils.Constants.REV;
 
 import java.io.IOException;
@@ -17,6 +18,7 @@ import org.apache.http.client.ClientProtocolException;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.database.sqlite.SQLiteException;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -28,6 +30,8 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.fooding.adapters.ProductArrayAdapter;
+import com.fooding.adapters.ProductsDbAdapter;
+import com.fooding.contracts.ProductDbContract;
 import com.fooding.contracts.WebApiContract;
 import com.fooding.entities.Product;
 import com.fooding.webapi.ProductWebApi;
@@ -38,15 +42,24 @@ public class ProductsActivity extends Activity implements OnItemClickListener  {
 	private ListView listView;
 	private ProductArrayAdapter productsArrayAdapter;
 	private List<Product> products;
+	private ProductDbContract db;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		
+		super.onCreate(savedInstanceState);		
 		setContentView(R.layout.products_layout);
 		
-		products = getProductList();
-		if (products != null && products.size() > 0) {
+		db = new ProductsDbAdapter(this);
+		
+		try {
+			db.open();
+		} catch (SQLiteException e) {
+			Log.e(TAG, String.format("SQLiteException: %s", e.getMessage()));
+		}
+		
+		//products = getProductList();
+		products = getProductListFromDb();
+		if (products != null && products.size() > 0) {			
 			listView = (ListView) findViewById(R.id.products);
 			productsArrayAdapter = new ProductArrayAdapter(this, R.layout.product_list_item, products);
 			listView.setAdapter(this.productsArrayAdapter);
@@ -90,8 +103,8 @@ public class ProductsActivity extends Activity implements OnItemClickListener  {
 			case ADD_PRODUCTS_RESULT:
 				if (resultCode == Activity.RESULT_OK) {
 					products.clear();
-					products = getProductList();
-					Log.w(TAG, 
+					products = getProductListFromDb();
+					Log.d(TAG, 
 							String.format("onActivityResult getProductList returned %s", 
 									products.toString()));
 					if (products != null && products.size() > 0) {
@@ -104,9 +117,16 @@ public class ProductsActivity extends Activity implements OnItemClickListener  {
 				break;
 		}
 	}
+	
+	@Override
+	protected void onDestroy() {
+		db.close();
+		super.onDestroy();
+	}
 
 	public void onItemClick(AdapterView<?> adapter, View view, int position, long id) {
 		View v = listView.getChildAt(position);
+		TextView productIdText = (TextView) v.findViewById(R.id.product_id);
 		TextView idText = (TextView) v.findViewById(R.id.id);
 		TextView revText = (TextView) v.findViewById(R.id.rev);
 		TextView nameText = (TextView) v.findViewById(R.id.name);
@@ -115,6 +135,8 @@ public class ProductsActivity extends Activity implements OnItemClickListener  {
 		Intent intent = new Intent(v.getContext(), EditProductActivity.class);
 		intent.putExtra(EDIT_FLAG, true);
 		intent.putExtra(ADD_FLAG, false);
+		if (productIdText != null)
+			intent.putExtra(PRODUCT_ID, productIdText.getText().toString());
 		if (idText != null)
 			intent.putExtra(ID, idText.getText().toString());						
 		if(revText != null)
@@ -127,7 +149,7 @@ public class ProductsActivity extends Activity implements OnItemClickListener  {
 		startActivityForResult(intent, EDIT_PRODUCTS_RESULT);
 	}
 	
-	private List<Product> getProductList() {
+	private static final List<Product> getProductList() {
 		List<Product> products = new ArrayList<Product>();
 		try {	
 			WebApiContract<Product, String> webApi = new ProductWebApi();
@@ -147,5 +169,9 @@ public class ProductsActivity extends Activity implements OnItemClickListener  {
 		Log.d(TAG, "getProductList returned: " + products.toString());
 		
 		return products;
+	}
+	
+	private final List<Product> getProductListFromDb() {		
+		return db.getProducts();
 	}
 }

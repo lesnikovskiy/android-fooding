@@ -30,10 +30,15 @@ public class ProductArrayAdapter extends ArrayAdapter<Product> {
 		
 		Product product = products.get(position);
 		if (product != null) {
+			TextView productIdText = (TextView) view.findViewById(R.id.product_id);
 			TextView idText = (TextView) view.findViewById(R.id.id);
 			TextView revText = (TextView) view.findViewById(R.id.rev);
 			TextView nameText = (TextView) view.findViewById(R.id.name);
 			TextView priceText = (TextView) view.findViewById(R.id.price);
+			
+			if (productIdText != null) {
+				productIdText.setText(String.valueOf(product.getProductId()));
+			}
 			
 			if (idText != null) {
 				idText.setText(product.getId());

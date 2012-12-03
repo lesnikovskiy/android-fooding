@@ -1,6 +1,7 @@
 package com.fooding.utils;
 
 public final class Constants {
+	public final static String PRODUCT_ID = "productid";
 	public final static String ID = "id";
 	public final static String REV = "rev";
 	public final static String NAME = "name";
