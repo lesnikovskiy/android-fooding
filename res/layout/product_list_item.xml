@@ -7,17 +7,7 @@
 	    android:layout_width="wrap_content"
 	    android:layout_height="wrap_content"
 	    android:visibility="gone"
-	    android:id="@+id/product_id" />
-	<TextView 
-	    android:layout_width="wrap_content"
-	    android:layout_height="wrap_content"
-	    android:visibility="gone"
-	    android:id="@+id/id" />
-	<TextView 
-	    android:layout_width="wrap_content"
-	    android:layout_height="wrap_content"
-	    android:visibility="gone"
-	    android:id="@+id/rev"/>
+	    android:id="@+id/product_id" />	
 	<LinearLayout
 	    android:layout_width="wrap_content"
 	    android:layout_height="wrap_content"

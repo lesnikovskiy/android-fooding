@@ -1,20 +1,13 @@
 package com.fooding.activities;
 
-import static com.fooding.utils.Constants.ADD_FLAG;
-import static com.fooding.utils.Constants.ADD_PRODUCTS_RESULT;
-import static com.fooding.utils.Constants.EDIT_FLAG;
-import static com.fooding.utils.Constants.EDIT_PRODUCTS_RESULT;
-import static com.fooding.utils.Constants.ID;
-import static com.fooding.utils.Constants.NAME;
-import static com.fooding.utils.Constants.PRICE;
-import static com.fooding.utils.Constants.PRODUCT_ID;
-import static com.fooding.utils.Constants.REV;
+import static com.fooding.utils.ProductConstants.ADD_FLAG;
+import static com.fooding.utils.ProductConstants.EDIT_FLAG;
+import static com.fooding.utils.ProductConstants.NAME;
+import static com.fooding.utils.ProductConstants.PRICE;
+import static com.fooding.utils.ProductConstants.PRODUCTID;
+import static com.fooding.utils.ProductConstants.PRODUCTS_RESULT;
 
-import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
-
-import org.apache.http.client.ClientProtocolException;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -32,9 +25,7 @@ import android.widget.TextView;
 import com.fooding.adapters.ProductArrayAdapter;
 import com.fooding.adapters.ProductsDbAdapter;
 import com.fooding.contracts.ProductDbContract;
-import com.fooding.contracts.WebApiContract;
-import com.fooding.entities.Product;
-import com.fooding.webapi.ProductWebApi;
+import com.fooding.models.Product;
 
 public class ProductsActivity extends Activity implements OnItemClickListener  {
 	private final static String TAG = "ProductsActivity";
@@ -57,7 +48,6 @@ public class ProductsActivity extends Activity implements OnItemClickListener  {
 			Log.e(TAG, String.format("SQLiteException: %s", e.getMessage()));
 		}
 		
-		//products = getProductList();
 		products = getProductListFromDb();
 		if (products != null && products.size() > 0) {			
 			listView = (ListView) findViewById(R.id.products);
@@ -81,7 +71,7 @@ public class ProductsActivity extends Activity implements OnItemClickListener  {
 				Intent intent = new Intent(this, EditProductActivity.class);
 				intent.putExtra(ADD_FLAG, true);
 				intent.putExtra(EDIT_FLAG, false);
-				startActivityForResult(intent, ADD_PRODUCTS_RESULT);				
+				startActivityForResult(intent, PRODUCTS_RESULT);				
 				return true;
 			case R.id.menu_settings:
 				Log.d(TAG, "You selected menu settings");
@@ -99,8 +89,7 @@ public class ProductsActivity extends Activity implements OnItemClickListener  {
 		Log.d(TAG, "resultCode: " + resultCode);
 		
 		switch(requestCode) {
-			case EDIT_PRODUCTS_RESULT:
-			case ADD_PRODUCTS_RESULT:
+			case PRODUCTS_RESULT:
 				if (resultCode == Activity.RESULT_OK) {
 					products.clear();
 					products = getProductListFromDb();
@@ -127,8 +116,6 @@ public class ProductsActivity extends Activity implements OnItemClickListener  {
 	public void onItemClick(AdapterView<?> adapter, View view, int position, long id) {
 		View v = listView.getChildAt(position);
 		TextView productIdText = (TextView) v.findViewById(R.id.product_id);
-		TextView idText = (TextView) v.findViewById(R.id.id);
-		TextView revText = (TextView) v.findViewById(R.id.rev);
 		TextView nameText = (TextView) v.findViewById(R.id.name);
 		TextView priceText = (TextView) v.findViewById(R.id.price);
 		
@@ -136,39 +123,13 @@ public class ProductsActivity extends Activity implements OnItemClickListener  {
 		intent.putExtra(EDIT_FLAG, true);
 		intent.putExtra(ADD_FLAG, false);
 		if (productIdText != null)
-			intent.putExtra(PRODUCT_ID, productIdText.getText().toString());
-		if (idText != null)
-			intent.putExtra(ID, idText.getText().toString());						
-		if(revText != null)
-			intent.putExtra(REV, revText.getText().toString());
+			intent.putExtra(PRODUCTID, productIdText.getText().toString());	
 		if(nameText != null)
 			intent.putExtra(NAME, nameText.getText().toString());
 		if(priceText != null)
 			intent.putExtra(PRICE, priceText.getText().toString());
 		
-		startActivityForResult(intent, EDIT_PRODUCTS_RESULT);
-	}
-	
-	private static final List<Product> getProductList() {
-		List<Product> products = new ArrayList<Product>();
-		try {	
-			WebApiContract<Product, String> webApi = new ProductWebApi();
-			products = webApi.getlist();						
-		} catch (ClientProtocolException e) {
-			String errorMessage = "ClientProtocolException: " + e.getMessage() + e.getStackTrace().toString();
-			Log.e(TAG, errorMessage);
-		} catch (IOException e) {
-			String errorMessage = "IOException: " + e.getMessage() + e.getStackTrace().toString();
-			Log.e(TAG, errorMessage);
-		}
-		catch (Exception e) {
-			String errorMessage = "Exception: " + e.getMessage() + e.getStackTrace().toString();
-			Log.e(TAG, errorMessage);
-		}
-		
-		Log.d(TAG, "getProductList returned: " + products.toString());
-		
-		return products;
+		startActivityForResult(intent, PRODUCTS_RESULT);
 	}
 	
 	private final List<Product> getProductListFromDb() {		

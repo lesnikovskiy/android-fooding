@@ -10,7 +10,7 @@ import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
 import com.fooding.activities.R;
-import com.fooding.entities.Product;
+import com.fooding.models.Product;
 
 public class ProductArrayAdapter extends ArrayAdapter<Product> {
 	private final List<Product> products;	
@@ -30,29 +30,19 @@ public class ProductArrayAdapter extends ArrayAdapter<Product> {
 		
 		Product product = products.get(position);
 		if (product != null) {
-			TextView productIdText = (TextView) view.findViewById(R.id.product_id);
-			TextView idText = (TextView) view.findViewById(R.id.id);
-			TextView revText = (TextView) view.findViewById(R.id.rev);
-			TextView nameText = (TextView) view.findViewById(R.id.name);
-			TextView priceText = (TextView) view.findViewById(R.id.price);
+			TextView idTextView = (TextView) view.findViewById(R.id.product_id);
+			TextView nameTextView = (TextView) view.findViewById(R.id.name);
+			TextView priceTextView = (TextView) view.findViewById(R.id.price);
 			
-			if (productIdText != null) {
-				productIdText.setText(String.valueOf(product.getProductId()));
+			if (idTextView != null) {
+				idTextView.setText(String.valueOf(product.getProductId()));
 			}
+						
+			if (nameTextView != null)
+				nameTextView.setText(product.getName());
 			
-			if (idText != null) {
-				idText.setText(product.getId());
-			}
-			
-			if (revText != null) {
-				revText.setText(product.getRev());
-			}
-			
-			if (nameText != null)
-				nameText.setText(product.getName());
-			
-			if (priceText != null)
-				priceText.setText(product.getPrice());
+			if (priceTextView != null)
+				priceTextView.setText(String.valueOf(product.getPrice()));
 		}
 		
 		return view;

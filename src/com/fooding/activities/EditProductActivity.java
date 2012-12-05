@@ -1,17 +1,10 @@
 package com.fooding.activities;
 
-import static com.fooding.utils.Constants.ADD_FLAG;
-import static com.fooding.utils.Constants.EDIT_FLAG;
-import static com.fooding.utils.Constants.ID;
-import static com.fooding.utils.Constants.NAME;
-import static com.fooding.utils.Constants.PRICE;
-import static com.fooding.utils.Constants.PRODUCT_ID;
-import static com.fooding.utils.Constants.REV;
-
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-
-import org.apache.http.client.ClientProtocolException;
+import static com.fooding.utils.ProductConstants.ADD_FLAG;
+import static com.fooding.utils.ProductConstants.EDIT_FLAG;
+import static com.fooding.utils.ProductConstants.PRODUCTID;
+import static com.fooding.utils.ProductConstants.NAME;
+import static com.fooding.utils.ProductConstants.PRICE;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -25,18 +18,13 @@ import android.widget.TextView;
 
 import com.fooding.adapters.ProductsDbAdapter;
 import com.fooding.contracts.ProductDbContract;
-import com.fooding.contracts.WebApiContract;
-import com.fooding.entities.Product;
-import com.fooding.webapi.ProductWebApi;
+import com.fooding.models.Product;
 
 public class EditProductActivity extends Activity implements OnClickListener {	
-	private TextView productidTextView;
 	private TextView idTextView;
-	private TextView revTextView;
 	private EditText nameEditText;
 	private EditText priceEditText;	
 	
-	private WebApiContract<Product, String> webApi;
 	private ProductDbContract db;
 	
 	final static private String TAG = "EditProductActivity";
@@ -46,14 +34,11 @@ public class EditProductActivity extends Activity implements OnClickListener {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.edit_product_layout);
         
-        productidTextView = (TextView) this.findViewById(R.id.product_id);
-        idTextView = (TextView) this.findViewById(R.id.id);
-        revTextView = (TextView) this.findViewById(R.id.rev);
-        nameEditText = (EditText) this.findViewById(R.id.productName);
-        priceEditText = (EditText) this.findViewById(R.id.productPrice);
+        idTextView = (TextView) this.findViewById(R.id.product_id);
+        nameEditText = (EditText) this.findViewById(R.id.product_name);
+        priceEditText = (EditText) this.findViewById(R.id.product_price);
         
-        webApi = new ProductWebApi();
-        db = new ProductsDbAdapter(this);
+        db = new ProductsDbAdapter(this);       
         
         try {
         	db.open();
@@ -70,20 +55,12 @@ public class EditProductActivity extends Activity implements OnClickListener {
         View removeButton = this.findViewById(R.id.removeProductButton);
         
         if (editFlag) {
-        	String productid = intent.getExtras().getString(PRODUCT_ID);
-	        String id = intent.getExtras().getString(ID);
-	        String rev = intent.getExtras().getString(REV);
+        	String productid = intent.getExtras().getString(PRODUCTID);
 	        String name = intent.getExtras().getString(NAME);
 	        String price = intent.getExtras().getString(PRICE);        
 	        
 	        if (productid != null)
-	        	productidTextView.setText(productid);
-	        
-	        if (id != null)
-	        	idTextView.setText(id);
-	        
-	        if (rev != null)
-	        	revTextView.setText(rev);
+	        	idTextView.setText(productid);
 	        
 	        if (name != null)
 	        	nameEditText.setText(name);
@@ -112,123 +89,67 @@ public class EditProductActivity extends Activity implements OnClickListener {
     	super.onDestroy();
     }
     
-    public void onClick(View v) {
-    	String id = idTextView.getText().toString();
-		String rev = revTextView.getText().toString();
-    	
+    public void onClick(View v) {    	
     	switch(v.getId()) {
     		case R.id.cancelButton:
     			EditProductActivity.this.setResult(RESULT_CANCELED);
     			finish();
     			break;
-    		case R.id.addProductButton:
-    			String newProductName = nameEditText.getText().toString();
-    			String newProductPrice = priceEditText.getText().toString();
-    			
-    			Product newProduct = new Product(null, null, newProductName, newProductPrice);   			
-    			
-    			Log.d(TAG, 
-    					String.format("-X POST -d name: name=%s&price=%s", newProductName, newProductPrice));
-    			
+    		case R.id.addProductButton:   
     			try {
-    				db.insertProduct(newProduct);
-    				
-					String response = webApi.post(newProduct);				
-					Log.d(TAG, String.format("Response from server: %s", response));
+	    			String nName = nameEditText.getText().toString();
+	    			double nPrice = Double.parseDouble(priceEditText.getText().toString());
+	    			 
+					db.insertProduct(new Product(nName, nPrice));				
 					EditProductActivity.this.setResult(RESULT_OK);
-					finish();
-				} catch (UnsupportedEncodingException e) {
-					Log.e(TAG, String.format("UnsupportedEncodingException: %s", e.getMessage()));
-					EditProductActivity.this.setResult(RESULT_CANCELED);
-					finish();
-				} catch (ClientProtocolException e) {
-					Log.e(TAG, String.format("ClientProtocolException: %s", e.getMessage()));
-					EditProductActivity.this.setResult(RESULT_CANCELED);
-					finish();
-				} catch (NullPointerException e) {
-					Log.e(TAG, String.format("NullPointerException: %s", e.getMessage()));
-					EditProductActivity.this.setResult(RESULT_CANCELED);
-					finish();
-				} catch (IOException e) {
-					Log.e(TAG, String.format("IOException: %s", e.getMessage()));
-					EditProductActivity.this.setResult(RESULT_CANCELED);
-					finish();
-				}
+    			} catch (NumberFormatException e) {
+    				Log.e(TAG, "NumberFormatException when trying to add product");
+    				Log.e(TAG, String.format("Data dump: [name: %s, price: %s]", 
+    						nameEditText.getText().toString(), 
+    							priceEditText.getText().toString()));
+    				
+    				EditProductActivity.this.setResult(RESULT_CANCELED);
+    			} finally {
+    				finish();
+    			}
     			
     			break;
-    		case R.id.saveProductButton:   
-    			String productid = productidTextView.getText().toString();
-    			String name = nameEditText.getText().toString();
-    			String price = priceEditText.getText().toString();    
-    			
-    			long pid = 0;
+    		case R.id.saveProductButton:  
     			try {
-    				pid = Long.parseLong(productid);
-    			} catch (NumberFormatException e) {
-    				Log.e(TAG, String.format("NumberFormatException: %s", e.getMessage()));
-    			}
-    			
-    			Product udpProduct = new Product(pid, id, rev, name, price);
-    			
-    			Log.d(TAG, 
-    					String.format("-X PUT -d id: id=%s&rev=%s&name=%s&price=%s", id, rev, name, price));    			
-				try {
-					db.updateProduct(udpProduct);
-					
-					String response = webApi.put(udpProduct);				
-					Log.d(TAG, String.format("Response from server: %s", response));
-					EditProductActivity.this.setResult(RESULT_OK);
-					finish();
-				} catch (UnsupportedEncodingException e) {
-					Log.e(TAG, String.format("UnsupportedEncodingException: %s", e.getMessage()));
-					EditProductActivity.this.setResult(RESULT_CANCELED);
-					finish();
-				} catch (ClientProtocolException e) {
-					Log.e(TAG, String.format("ClientProtocolException: %s", e.getMessage()));
-					EditProductActivity.this.setResult(RESULT_CANCELED);
-					finish();
-				} catch (NullPointerException e) {
-					Log.e(TAG, String.format("NullPointerException: %s", e.getMessage()));
-					EditProductActivity.this.setResult(RESULT_CANCELED);
-					finish();
-				} catch (IOException e) {
-					Log.e(TAG, String.format("IOException: %s", e.getMessage()));
-					EditProductActivity.this.setResult(RESULT_CANCELED);
-					finish();
-				}
-				
-				break;
-    		case R.id.removeProductButton:    			
-    			long prodId = 0;
-    			try {
-    				prodId = Long.parseLong(productidTextView.getText().toString());
-    			} catch (NumberFormatException e) {
-    				Log.e(TAG, String.format("NumberFormatException: %s", e.getMessage()));
-    			}
-    			
-    			Log.d(TAG, String.format("-X DELETE -d id=%s&rev=%s", id, rev));
-    			Product delProduct = new Product(prodId, id, rev, null, null);
-    			
-    			try {
-    				db.deleteProduct(delProduct.getProductId());
-    				
-    				String response = webApi.delete(new Product(id, rev, null, null));
-    				Log.d(TAG, "Response from server: " + response);
+	    			long uId = Long.parseLong(idTextView.getText().toString());
+	    			String uName = nameEditText.getText().toString();
+	    			double uPrice = Double.parseDouble(priceEditText.getText().toString()); 
+        			
+    				db.updateProduct(new Product(uId, uName, uPrice));
     				EditProductActivity.this.setResult(RESULT_OK);
+    			} catch (NumberFormatException e) {
+    				Log.e(TAG, "NumberFormatException when trying to update product");
+    				Log.e(TAG, String.format("Data dump: [id: %s, name: %s, price: %s]", 
+    						idTextView.getText().toString(),
+    							nameEditText.getText().toString(), 
+    								priceEditText.getText().toString()));
+    				
+    				EditProductActivity.this.setResult(RESULT_CANCELED);
+    			} finally {
     				finish();
-    			} catch (ClientProtocolException e) {
-					Log.e(TAG, String.format("ClientProtocolException: %s", e.getMessage()));
-					EditProductActivity.this.setResult(RESULT_CANCELED);
-					finish();
-				} catch (NullPointerException e) {
-					Log.e(TAG, String.format("NullPointerException: %s", e.getMessage()));
-					EditProductActivity.this.setResult(RESULT_CANCELED);
-					finish();
-				} catch (IOException e) {
-					Log.e(TAG, String.format("IOException: %s", e.getMessage()));
-					EditProductActivity.this.setResult(RESULT_CANCELED);
-					finish();
-				}
+    			}
+    			
+				break;
+    		case R.id.removeProductButton:   
+    			try {
+    				long dId = Long.parseLong(idTextView.getText().toString());
+    				
+    				db.deleteProduct(dId);
+    				EditProductActivity.this.setResult(RESULT_OK);
+    			} catch (NumberFormatException e) {
+    				Log.e(TAG, "NumberFormatException when trying to delete product");
+    				Log.e(TAG, String.format("Data dump: [id: %s]", 
+    						idTextView.getText().toString()));
+    				
+    				EditProductActivity.this.setResult(RESULT_CANCELED);
+    			} finally {		
+    				finish();
+    			}
     			
     			break;
     	}

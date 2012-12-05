@@ -1,20 +1,16 @@
 package com.fooding.adapters;
 
-import static com.fooding.utils.DbConsts.COLUMN_ID;
-import static com.fooding.utils.DbConsts.COLUMN_NAME;
-import static com.fooding.utils.DbConsts.COLUMN_PRICE;
-import static com.fooding.utils.DbConsts.COLUMN_PROD_ID;
-import static com.fooding.utils.DbConsts.COLUMN_REV;
-import static com.fooding.utils.DbConsts.CREATE_CMD;
-import static com.fooding.utils.DbConsts.DB_NAME;
-import static com.fooding.utils.DbConsts.DB_VERSION;
-import static com.fooding.utils.DbConsts.DROP_CMD;
-import static com.fooding.utils.DbConsts.ID;
-import static com.fooding.utils.DbConsts.NAME;
-import static com.fooding.utils.DbConsts.PRICE;
-import static com.fooding.utils.DbConsts.PRODUCTID;
-import static com.fooding.utils.DbConsts.PRODUCTS_TABLE;
-import static com.fooding.utils.DbConsts.REV;
+import static com.fooding.utils.ProductConstants.COLUMN_ID;
+import static com.fooding.utils.ProductConstants.COLUMN_NAME;
+import static com.fooding.utils.ProductConstants.COLUMN_PRICE;
+import static com.fooding.utils.ProductConstants.CREATE_CMD;
+import static com.fooding.utils.ProductConstants.DB_NAME;
+import static com.fooding.utils.ProductConstants.DB_VERSION;
+import static com.fooding.utils.ProductConstants.DROP_CMD;
+import static com.fooding.utils.ProductConstants.NAME;
+import static com.fooding.utils.ProductConstants.PRICE;
+import static com.fooding.utils.ProductConstants.PRODUCTID;
+import static com.fooding.utils.ProductConstants.PRODUCTS_TABLE;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,7 +25,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
 import com.fooding.contracts.ProductDbContract;
-import com.fooding.entities.Product;
+import com.fooding.models.Product;
 
 public class ProductsDbAdapter implements ProductDbContract {
 	static final private String TAG = "ProductsDbAdapter";
@@ -58,19 +54,16 @@ public class ProductsDbAdapter implements ProductDbContract {
 		List<Product> products = new ArrayList<Product>();
 		
 		Cursor c = database.query(PRODUCTS_TABLE, 
-				new String[] {PRODUCTID, ID, REV, NAME, PRICE}, 
+				new String[] {PRODUCTID, NAME, PRICE}, 
 				null, null, null, null, null);
 		
 		if (c.moveToFirst() && c.getCount() > 0) {
 			do {
-				long productId = c.getLong(COLUMN_PROD_ID);
-				String id = c.getString(COLUMN_ID);
-				String rev = c.getString(COLUMN_REV);
-				String name = c.getString(COLUMN_NAME);
-				String price = c.getString(COLUMN_PRICE);
+				long productId = c.getLong(COLUMN_ID);
+				String name = c.getString(COLUMN_NAME );
+				double price = c.getDouble(COLUMN_PRICE);
 				
-				Product p = new Product(productId, id, rev, name, price);
-				products.add(p);
+				products.add(new Product(productId, name, price));
 			} while (c.moveToNext());
 		}
 		
@@ -79,8 +72,6 @@ public class ProductsDbAdapter implements ProductDbContract {
 
 	public boolean insertProduct(Product product) {
 		ContentValues values = new ContentValues();
-		values.put(ID, product.getId());
-		values.put(REV, product.getRev());
 		values.put(NAME, product.getName());
 		values.put(PRICE, product.getPrice());
 		
@@ -89,12 +80,14 @@ public class ProductsDbAdapter implements ProductDbContract {
 
 	public boolean updateProduct(Product product) {
 		long productId = product.getProductId();
-		if (productId <= 0)
+		if (productId <= 0) {
+			Log.w(TAG, 
+					String.format("Product was not updated as argument is less than or equals zero for '%s'",
+							product.getName()));
 			return insertProduct(product);
+		}
 		
 		ContentValues values = new ContentValues();
-		values.put(ID, product.getId());
-		values.put(REV, product.getRev());
 		values.put(NAME, product.getName());
 		values.put(PRICE, product.getPrice());
 		

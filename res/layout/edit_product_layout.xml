@@ -11,24 +11,14 @@
 	    android:layout_height="wrap_content"
 	    android:visibility="gone"
 	    android:id="@+id/product_id" />
-    <TextView 
-	    android:layout_width="wrap_content"
-	    android:layout_height="wrap_content"
-	    android:visibility="gone"
-	    android:id="@+id/id" />
-	<TextView 
-	    android:layout_width="wrap_content"
-	    android:layout_height="wrap_content"
-	    android:visibility="gone"
-	    android:id="@+id/rev" />
 
     <EditText
-        android:id="@+id/productName"
+        android:id="@+id/product_name"
         android:hint="@string/product_name_hint"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content" />
     <EditText
-        android:id="@+id/productPrice"
+        android:id="@+id/product_price"
         android:hint="@string/product_price_hint"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"

@@ -2,7 +2,7 @@ package com.fooding.contracts;
 
 import java.util.List;
 
-import com.fooding.entities.Product;
+import com.fooding.models.Product;
 
 public interface ProductDbContract extends DatabaseContract {
 	List<Product> getProducts();	
