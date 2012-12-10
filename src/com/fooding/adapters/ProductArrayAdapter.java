@@ -3,6 +3,7 @@ package com.fooding.adapters;
 import java.util.List;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +14,8 @@ import com.fooding.activities.R;
 import com.fooding.models.Product;
 
 public class ProductArrayAdapter extends ArrayAdapter<Product> {
+	private static final String TAG = "ProductArrayAdapter";
+	
 	private final List<Product> products;	
 	
 	public ProductArrayAdapter(Context context, int resource, List<Product> products) {
@@ -29,6 +32,8 @@ public class ProductArrayAdapter extends ArrayAdapter<Product> {
 		}
 		
 		Product product = products.get(position);
+		Log.d(TAG, String.format("Product to inflate: %s", product.toString()));
+		
 		if (product != null) {
 			TextView idTextView = (TextView) view.findViewById(R.id.product_id);
 			TextView nameTextView = (TextView) view.findViewById(R.id.name);

@@ -1,11 +1,12 @@
 package com.fooding.activities;
 
 import static com.fooding.utils.ProductConstants.ADD_FLAG;
+import static com.fooding.utils.ProductConstants.ADD_PRODUCT_RESULT;
 import static com.fooding.utils.ProductConstants.EDIT_FLAG;
+import static com.fooding.utils.ProductConstants.EDIT_PRODUCTS_RESULT;
+import static com.fooding.utils.ProductConstants.ID;
 import static com.fooding.utils.ProductConstants.NAME;
 import static com.fooding.utils.ProductConstants.PRICE;
-import static com.fooding.utils.ProductConstants.PRODUCTID;
-import static com.fooding.utils.ProductConstants.PRODUCTS_RESULT;
 
 import java.util.List;
 
@@ -71,7 +72,7 @@ public class ProductsActivity extends Activity implements OnItemClickListener  {
 				Intent intent = new Intent(this, EditProductActivity.class);
 				intent.putExtra(ADD_FLAG, true);
 				intent.putExtra(EDIT_FLAG, false);
-				startActivityForResult(intent, PRODUCTS_RESULT);				
+				startActivityForResult(intent, ADD_PRODUCT_RESULT);				
 				return true;
 			case R.id.menu_settings:
 				Log.d(TAG, "You selected menu settings");
@@ -84,23 +85,30 @@ public class ProductsActivity extends Activity implements OnItemClickListener  {
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
+		
 		Log.d(TAG, "onActivityResult");
 		Log.d(TAG, "requestCode: " + requestCode);
 		Log.d(TAG, "resultCode: " + resultCode);
 		
 		switch(requestCode) {
-			case PRODUCTS_RESULT:
+			case EDIT_PRODUCTS_RESULT:
+			case ADD_PRODUCT_RESULT:
 				if (resultCode == Activity.RESULT_OK) {
 					products.clear();
-					products = getProductListFromDb();
+					products = getProductListFromDb();					
 					Log.d(TAG, 
 							String.format("onActivityResult getProductList returned %s", 
 									products.toString()));
 					if (products != null && products.size() > 0) {
-						productsArrayAdapter = 
-								new ProductArrayAdapter(this, R.layout.product_list_item, products);
-						listView.setAdapter(productsArrayAdapter);
-						listView.setOnItemClickListener(this);
+						try {
+							productsArrayAdapter = 
+									new ProductArrayAdapter(this, R.layout.product_list_item, products);
+							listView.setAdapter(productsArrayAdapter);
+							productsArrayAdapter.notifyDataSetChanged();
+							listView.setOnItemClickListener(this);
+						} catch (Exception e) {
+							Log.e(TAG, e.getMessage());
+						}
 					}
 				}
 				break;
@@ -123,13 +131,13 @@ public class ProductsActivity extends Activity implements OnItemClickListener  {
 		intent.putExtra(EDIT_FLAG, true);
 		intent.putExtra(ADD_FLAG, false);
 		if (productIdText != null)
-			intent.putExtra(PRODUCTID, productIdText.getText().toString());	
+			intent.putExtra(ID, productIdText.getText().toString());	
 		if(nameText != null)
 			intent.putExtra(NAME, nameText.getText().toString());
 		if(priceText != null)
 			intent.putExtra(PRICE, priceText.getText().toString());
 		
-		startActivityForResult(intent, PRODUCTS_RESULT);
+		startActivityForResult(intent, EDIT_PRODUCTS_RESULT);
 	}
 	
 	private final List<Product> getProductListFromDb() {		

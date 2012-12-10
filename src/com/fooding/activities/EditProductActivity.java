@@ -2,10 +2,9 @@ package com.fooding.activities;
 
 import static com.fooding.utils.ProductConstants.ADD_FLAG;
 import static com.fooding.utils.ProductConstants.EDIT_FLAG;
-import static com.fooding.utils.ProductConstants.PRODUCTID;
+import static com.fooding.utils.ProductConstants.ID;
 import static com.fooding.utils.ProductConstants.NAME;
 import static com.fooding.utils.ProductConstants.PRICE;
-
 import android.app.Activity;
 import android.content.Intent;
 import android.database.sqlite.SQLiteException;
@@ -55,7 +54,7 @@ public class EditProductActivity extends Activity implements OnClickListener {
         View removeButton = this.findViewById(R.id.removeProductButton);
         
         if (editFlag) {
-        	String productid = intent.getExtras().getString(PRODUCTID);
+        	String productid = intent.getExtras().getString(ID);
 	        String name = intent.getExtras().getString(NAME);
 	        String price = intent.getExtras().getString(PRICE);        
 	        
@@ -99,8 +98,9 @@ public class EditProductActivity extends Activity implements OnClickListener {
     			try {
 	    			String nName = nameEditText.getText().toString();
 	    			double nPrice = Double.parseDouble(priceEditText.getText().toString());
-	    			 
-					db.insertProduct(new Product(nName, nPrice));				
+	    				    			 
+					db.insertProduct(new Product(nName, nPrice));
+					Log.d(TAG, "db.insertProduct successfully");
 					EditProductActivity.this.setResult(RESULT_OK);
     			} catch (NumberFormatException e) {
     				Log.e(TAG, "NumberFormatException when trying to add product");

@@ -1,7 +1,7 @@
 package com.fooding.models;
 
 public class Product {
-	private long productid;
+	private long id;
 	private String name;
 	private double price;
 	
@@ -11,13 +11,13 @@ public class Product {
 	}
 	
 	public Product(long productid, String name, double price) {
-		this.productid = productid;
+		this.id = productid;
 		this.name = name;
 		this.price = price;
 	}
 	
 	public long getProductId() {
-		return this.productid;
+		return this.id;
 	}
 	
 	public String getName() {

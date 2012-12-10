@@ -6,7 +6,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
-import android.widget.LinearLayout;
+import android.widget.TableLayout;
 
 public class MainActivity extends Activity implements OnClickListener {
 	@Override
@@ -14,16 +14,22 @@ public class MainActivity extends Activity implements OnClickListener {
 		super.onCreate(savedInstanceState);		
 		setContentView(R.layout.main_layout);
 		
-		LinearLayout ll = (LinearLayout) findViewById(R.id.main_linear_layout);
-		ll.setBackgroundResource(R.drawable.the_dirt);
+		TableLayout ll = (TableLayout) findViewById(R.id.main_table_layout);
+		ll.setBackgroundResource(R.drawable.fooding);
 		
-		Button productsButton = (Button) findViewById(R.id.products_button);
-		productsButton.setOnClickListener(this);
+		final Button eventListButton = (Button) findViewById(R.id.event_list_button);
+		eventListButton.setOnClickListener(this);
+		final Button recipesButton = (Button) findViewById(R.id.recipes_button);
+		recipesButton.setOnClickListener(this);
+		final Button purchaseListButton = (Button) findViewById(R.id.purchase_list_button);
+		purchaseListButton.setOnClickListener(this);
+		final Button availableProductsButton = (Button) findViewById(R.id.available_products_button);
+		availableProductsButton.setOnClickListener(this);
 	}
 
 	public void onClick(View v) {
 		switch(v.getId()) {
-			case R.id.products_button:
+			case R.id.event_list_button:
 				Intent intent = new Intent(v.getContext(), ProductsActivity.class);
 				startActivity(intent);
 				break;	

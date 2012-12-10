@@ -7,8 +7,10 @@
         Here you will be able to manage your kitchen chores, create menues, build purchase lists!\
         Enjoy!
     </string>
-    <string name="main_products_button">Products</string>
-    <string name="main_dishes_button">Dishes</string>
+    <string name="main_event_list_text">Events</string>
+    <string name="main_recipes_text">Recipes</string>
+    <string name="main_purchase_list_text">Purchase List</string>    
+    <string name="main_available_products_text">Available Products</string>    
     
     <string name="products_title">Fooding : Products</string>
     

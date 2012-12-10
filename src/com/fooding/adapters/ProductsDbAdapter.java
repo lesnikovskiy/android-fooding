@@ -1,15 +1,15 @@
 package com.fooding.adapters;
 
+import static com.fooding.utils.DbConsts.DB_NAME;
+import static com.fooding.utils.DbConsts.DB_VERSION;
 import static com.fooding.utils.ProductConstants.COLUMN_ID;
 import static com.fooding.utils.ProductConstants.COLUMN_NAME;
 import static com.fooding.utils.ProductConstants.COLUMN_PRICE;
 import static com.fooding.utils.ProductConstants.CREATE_CMD;
-import static com.fooding.utils.ProductConstants.DB_NAME;
-import static com.fooding.utils.ProductConstants.DB_VERSION;
 import static com.fooding.utils.ProductConstants.DROP_CMD;
+import static com.fooding.utils.ProductConstants.ID;
 import static com.fooding.utils.ProductConstants.NAME;
 import static com.fooding.utils.ProductConstants.PRICE;
-import static com.fooding.utils.ProductConstants.PRODUCTID;
 import static com.fooding.utils.ProductConstants.PRODUCTS_TABLE;
 
 import java.util.ArrayList;
@@ -54,7 +54,7 @@ public class ProductsDbAdapter implements ProductDbContract {
 		List<Product> products = new ArrayList<Product>();
 		
 		Cursor c = database.query(PRODUCTS_TABLE, 
-				new String[] {PRODUCTID, NAME, PRICE}, 
+				new String[] {ID, NAME, PRICE}, 
 				null, null, null, null, null);
 		
 		if (c.moveToFirst() && c.getCount() > 0) {
@@ -91,7 +91,7 @@ public class ProductsDbAdapter implements ProductDbContract {
 		values.put(NAME, product.getName());
 		values.put(PRICE, product.getPrice());
 		
-		String whereClause = String.format("%s=%s", PRODUCTID, productId);
+		String whereClause = String.format("%s=%s", ID, productId);
 		
 		return database.update(PRODUCTS_TABLE, values, whereClause, null) > 0;
 	}
@@ -102,7 +102,7 @@ public class ProductsDbAdapter implements ProductDbContract {
 		if (productId <= 0)
 			return false;
 		
-		String whereClause = String.format("%s=%s", PRODUCTID, productId);
+		String whereClause = String.format("%s=%s", ID, productId);
 		Log.d(TAG, String.format("whereClause = %s", whereClause));
 		
 		return database.delete(PRODUCTS_TABLE, whereClause, null) > 0;
