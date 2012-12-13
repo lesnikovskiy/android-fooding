@@ -16,7 +16,7 @@ public class Product {
 		this.price = price;
 	}
 	
-	public long getProductId() {
+	public long getId() {
 		return this.id;
 	}
 	
@@ -26,11 +26,5 @@ public class Product {
 	
 	public double getPrice() {
 		return this.price;
-	}
-	
-	@Override
-	public String toString() {
-		return String.format("[productid: %s, name: %s, price: %10.2f]", 
-				getProductId(), getName(), getPrice());
 	}
 }

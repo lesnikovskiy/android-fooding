@@ -5,8 +5,6 @@ import static com.fooding.utils.DbConsts.DB_VERSION;
 import static com.fooding.utils.ProductConstants.COLUMN_ID;
 import static com.fooding.utils.ProductConstants.COLUMN_NAME;
 import static com.fooding.utils.ProductConstants.COLUMN_PRICE;
-import static com.fooding.utils.ProductConstants.CREATE_CMD;
-import static com.fooding.utils.ProductConstants.DROP_CMD;
 import static com.fooding.utils.ProductConstants.ID;
 import static com.fooding.utils.ProductConstants.NAME;
 import static com.fooding.utils.ProductConstants.PRICE;
@@ -19,9 +17,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteDatabase.CursorFactory;
 import android.database.sqlite.SQLiteException;
-import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
 import com.fooding.contracts.ProductDbContract;
@@ -30,11 +26,11 @@ import com.fooding.models.Product;
 public class ProductsDbAdapter implements ProductDbContract {
 	static final private String TAG = "ProductsDbAdapter";
 	
-	private ProductsOpenHelper openHelper;
-	private SQLiteDatabase database;
+	private final OpenHelper openHelper;
+	private  SQLiteDatabase database;
 	
 	public ProductsDbAdapter(Context context) {
-		openHelper = new ProductsOpenHelper(context, DB_NAME, null, DB_VERSION);
+		openHelper = new OpenHelper(context, DB_NAME, null, DB_VERSION);
 	}
 	
 	public void open() throws SQLiteException {
@@ -47,6 +43,7 @@ public class ProductsDbAdapter implements ProductDbContract {
 	}
 	
 	public void close() {
+		database.close();
 		openHelper.close();
 	}
 	
@@ -79,7 +76,7 @@ public class ProductsDbAdapter implements ProductDbContract {
 	}
 
 	public boolean updateProduct(Product product) {
-		long productId = product.getProductId();
+		long productId = product.getId();
 		if (productId <= 0) {
 			Log.w(TAG, 
 					String.format("Product was not updated as argument is less than or equals zero for '%s'",
@@ -106,26 +103,5 @@ public class ProductsDbAdapter implements ProductDbContract {
 		Log.d(TAG, String.format("whereClause = %s", whereClause));
 		
 		return database.delete(PRODUCTS_TABLE, whereClause, null) > 0;
-	}
-	
-	private static class ProductsOpenHelper extends SQLiteOpenHelper {
-		static final private String TAG = "ProductsOpenHelper";
-		
-		public ProductsOpenHelper(Context context, String name,
-				CursorFactory factory, int version) {		
-			super(context, name, factory, version);
-		}
-
-		@Override
-		public void onCreate(SQLiteDatabase db) {
-			Log.d(TAG, "executes sql command: " + CREATE_CMD);
-			db.execSQL(CREATE_CMD);
-		}
-
-		@Override
-		public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-			Log.d(TAG, "executes sql command: " + DROP_CMD);
-			db.execSQL(DROP_CMD);
-		}		
 	}
 }

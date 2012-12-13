@@ -40,7 +40,7 @@ public class ProductArrayAdapter extends ArrayAdapter<Product> {
 			TextView priceTextView = (TextView) view.findViewById(R.id.price);
 			
 			if (idTextView != null) {
-				idTextView.setText(String.valueOf(product.getProductId()));
+				idTextView.setText(String.valueOf(product.getId()));
 			}
 						
 			if (nameTextView != null)

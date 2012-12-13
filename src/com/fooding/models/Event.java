@@ -1,6 +1,8 @@
 package com.fooding.models;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 
 public class Event {
 	private long id;
@@ -28,5 +30,10 @@ public class Event {
 	
 	public Date getDate() {
 		return this.date;
+	}
+	
+	public String getDateString() {
+		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyy", Locale.US);		
+		return sdf.format(this.getDate());
 	}
 }

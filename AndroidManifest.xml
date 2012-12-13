@@ -28,6 +28,12 @@
             android:name=".EditProductActivity"
             android:label="@string/edit_product_label"
             android:theme="@android:style/Theme.Dialog" />
+        <activity
+            android:name=".EventsActivity"
+            android:label="@string/events_activity_name" />
+        <activity
+            android:name=".AddEventActivity"
+            android:label="@string/events_add_event_title" />
     </application>
 
 </manifest>

@@ -26,4 +26,10 @@
     
     <string name="menu_new_product_item">Add Product</string>
 	<string name="menu_settings_item">Settings</string>
+	
+	<string name="events_activity_name">Events</string>
+	<string name="events_name_hint">Enter event name</string>
+	<string name="events_save_button">Save</string>
+	<string name="events_add_menu_item">Add Event</string>
+	<string name="events_add_event_title">Fooding : Create Event</string>
 </resources>

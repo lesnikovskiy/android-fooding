@@ -15,9 +15,4 @@ public final class ProductConstants extends DbConsts {
 	static final public String EDIT_FLAG = "EDIT_FLAG";
 	static final public int EDIT_PRODUCTS_RESULT = 100;
 	static final public int ADD_PRODUCT_RESULT = 200;
-	
-	static final public String CREATE_CMD = 
-			"create table products" +
-			"(id integer primary key autoincrement, name text not null, price real);";
-	static final public String DROP_CMD = "drop table if exists products;";
 }

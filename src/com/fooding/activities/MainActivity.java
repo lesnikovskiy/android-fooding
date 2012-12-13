@@ -29,10 +29,15 @@ public class MainActivity extends Activity implements OnClickListener {
 
 	public void onClick(View v) {
 		switch(v.getId()) {
-			case R.id.event_list_button:
-				Intent intent = new Intent(v.getContext(), ProductsActivity.class);
-				startActivity(intent);
-				break;	
+		case R.id.event_list_button:
+			Intent eventsActivity = new Intent(v.getContext(), EventsActivity.class);
+			startActivity(eventsActivity);
+			break;
+			
+		case R.id.purchase_list_button:
+			Intent prodsActivity = new Intent(v.getContext(), ProductsActivity.class);
+			startActivity(prodsActivity);
+			break;
 		}
 	}
 }
