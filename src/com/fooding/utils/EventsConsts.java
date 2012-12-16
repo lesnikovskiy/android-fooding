@@ -1,8 +1,6 @@
 package com.fooding.utils;
 
-public class EventsConsts extends DbConsts {
-	static final public String EVENTS_TABLE = "events";
-	
+public class EventsConsts extends DbConsts {	
 	static final public String ID = "id";
 	static final public String NAME = "name";
 	static final public String DATE = "date";

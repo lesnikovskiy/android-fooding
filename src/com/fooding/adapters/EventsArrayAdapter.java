@@ -44,6 +44,7 @@ public class EventsArrayAdapter extends ArrayAdapter<Event> {
 		TextView nameTextView = new TextView(getContext());
 		nameTextView.setId(100);
 		nameTextView.setText(event.getName());
+		nameTextView.setPadding(10, 0, 0, 0);
 		nameTextView.setLayoutParams(leftParams);
 		
 		RelativeLayout.LayoutParams rightParams =
@@ -53,6 +54,7 @@ public class EventsArrayAdapter extends ArrayAdapter<Event> {
 		TextView dateTextView = new TextView(getContext());
 		dateTextView.setId(200);
 		dateTextView.setText(event.getDateString());
+		dateTextView.setPadding(0, 0, 10, 0);
 		dateTextView.setLayoutParams(rightParams);
 		
 		view.addView(nameTextView);

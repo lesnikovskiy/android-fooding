@@ -38,6 +38,11 @@ public class MainActivity extends Activity implements OnClickListener {
 			Intent prodsActivity = new Intent(v.getContext(), ProductsActivity.class);
 			startActivity(prodsActivity);
 			break;
+			
+		case R.id.recipes_button:
+			Intent recipesActivity = new Intent(v.getContext(), RecipesActivity.class);
+			startActivity(recipesActivity);
+			break;
 		}
 	}
 }

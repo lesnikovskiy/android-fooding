@@ -34,6 +34,9 @@
         <activity
             android:name=".AddEventActivity"
             android:label="@string/events_add_event_title" />
+        <activity
+            android:name=".RecipesActivity"
+            android:label="@string/recipes_activity_title" />
     </application>
 
 </manifest>

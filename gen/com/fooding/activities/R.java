@@ -20,9 +20,9 @@ public final class R {
     }
     public static final class id {
         public static final int addProductButton=0x7f070003;
-        public static final int available_products_button=0x7f07000e;
+        public static final int available_products_button=0x7f07000d;
         public static final int cancelButton=0x7f070006;
-        public static final int event_list_button=0x7f07000b;
+        public static final int event_list_button=0x7f07000e;
         public static final int event_name=0x7f070007;
         public static final int events_date_picker=0x7f070008;
         public static final int main_table_layout=0x7f07000a;
@@ -34,7 +34,7 @@ public final class R {
         public static final int product_name=0x7f070001;
         public static final int product_price=0x7f070002;
         public static final int products=0x7f070011;
-        public static final int purchase_list_button=0x7f07000d;
+        public static final int purchase_list_button=0x7f07000b;
         public static final int recipes_button=0x7f07000c;
         public static final int removeProductButton=0x7f070005;
         public static final int saveProductButton=0x7f070004;
@@ -61,10 +61,10 @@ public final class R {
         public static final int events_name_hint=0x7f040015;
         public static final int events_save_button=0x7f040016;
         public static final int main_activity_title=0x7f040002;
-        public static final int main_available_products_text=0x7f040007;
-        public static final int main_event_list_text=0x7f040004;
+        public static final int main_available_products_text=0x7f040006;
+        public static final int main_event_list_text=0x7f040007;
         public static final int main_greeting_message=0x7f040003;
-        public static final int main_purchase_list_text=0x7f040006;
+        public static final int main_purchase_list_text=0x7f040004;
         public static final int main_recipes_text=0x7f040005;
         public static final int menu_new_product_item=0x7f040012;
         public static final int menu_settings_item=0x7f040013;
@@ -74,6 +74,8 @@ public final class R {
         public static final int product_price_hint=0x7f04000d;
         public static final int product_price_label=0x7f04000b;
         public static final int products_title=0x7f040008;
+        public static final int recipes_activity_title=0x7f040019;
+        public static final int recipes_add_recipe_menu_item=0x7f04001a;
         public static final int remove_product_button=0x7f040010;
         public static final int save_product_button=0x7f04000f;
     }

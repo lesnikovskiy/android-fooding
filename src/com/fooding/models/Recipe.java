@@ -8,6 +8,11 @@ public class Recipe {
 	private List<Product> products;
 	private String instructions;
 	
+	public Recipe(long id, String name) {
+		this.id = id;
+		this.name = name;
+	}
+	
 	public Recipe(String name, String instructions) {
 		this.name = name;
 		this.instructions = instructions;

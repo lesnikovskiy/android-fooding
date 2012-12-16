@@ -1,8 +1,6 @@
 package com.fooding.utils;
 
-public final class ProductConstants extends DbConsts {
-	static final public String PRODUCTS_TABLE = "products";
-	
+public final class ProductConstants extends DbConsts {	
 	static final public String ID = "id";
 	static final public String NAME = "name";
 	static final public String PRICE = "price";

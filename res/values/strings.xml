@@ -7,10 +7,10 @@
         Here you will be able to manage your kitchen chores, create menues, build purchase lists!\
         Enjoy!
     </string>
-    <string name="main_event_list_text">Events</string>
-    <string name="main_recipes_text">Recipes</string>
-    <string name="main_purchase_list_text">Purchase List</string>    
-    <string name="main_available_products_text">Available Products</string>    
+    <string name="main_purchase_list_text">Purchase List</string> 
+    <string name="main_recipes_text">Recipes</string>    
+    <string name="main_available_products_text">Available Products</string>
+    <string name="main_event_list_text">Events</string>        
     
     <string name="products_title">Fooding : Products</string>
     
@@ -29,7 +29,10 @@
 	
 	<string name="events_activity_name">Events</string>
 	<string name="events_name_hint">Enter event name</string>
-	<string name="events_save_button">Save</string>
+	<string name="events_save_button">Next</string>
 	<string name="events_add_menu_item">Add Event</string>
 	<string name="events_add_event_title">Fooding : Create Event</string>
+	
+	<string name="recipes_activity_title">Fooding : Recipes</string>
+	<string name="recipes_add_recipe_menu_item">Add Recipe</string>
 </resources>
