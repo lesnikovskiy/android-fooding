@@ -66,14 +66,12 @@ public class RecipeDbAdapter implements RecipesContract {
 				null, null, null, null, null);
 		
 		if (c.moveToFirst() && c.getCount() > 0) {
-			if (c.moveToFirst() && c.getCount() > 0) {
-				do {
-					long id = c.getLong(COLUMN_ID);
-					String name = c.getString(COLUMN_NAME);
-					
-					recipes.add(new Recipe(id, name));
-				} while (c.moveToNext());
-			}
+			do {
+				long id = c.getLong(COLUMN_ID);
+				String name = c.getString(COLUMN_NAME);
+				
+				recipes.add(new Recipe(id, name));
+			} while (c.moveToNext());
 		}
 		
 		return recipes;

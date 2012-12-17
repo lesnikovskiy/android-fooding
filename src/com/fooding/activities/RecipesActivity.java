@@ -46,27 +46,12 @@ public class RecipesActivity extends ListActivity {
 	}
 	
 	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		super.onCreateOptionsMenu(menu);
-		
+	public boolean onCreateOptionsMenu(Menu menu) {	
 		MenuItem addItem = menu.add(0, MENU_ADD, Menu.NONE, R.string.recipes_add_recipe_menu_item);
 		addItem.setShortcut('0', 'a');
+		addItem.setIntent(new Intent(getApplicationContext(), AddRecipeActivity.class));
 		
-		return true;
-	}
-	
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		super.onOptionsItemSelected(item);
-		
-		switch(item.getItemId()) {
-		case MENU_ADD:
-			Intent addRecipeActivity = new Intent(getApplicationContext(), AddRecipeActivity.class);
-			startActivity(addRecipeActivity);
-			return true;
-		}
-		
-		return false;
+		return super.onCreateOptionsMenu(menu);
 	}
 	
 	@Override

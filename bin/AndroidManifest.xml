@@ -17,7 +17,6 @@
             android:label="@string/product_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -37,6 +36,14 @@
         <activity
             android:name=".RecipesActivity"
             android:label="@string/recipes_activity_title" />
+        <activity
+            android:name=".AddRecipeActivity"
+            android:label="@string/recipes_add_recipe_activity_title">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
     </application>
 
 </manifest>
