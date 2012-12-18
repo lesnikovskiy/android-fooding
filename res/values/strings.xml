@@ -39,4 +39,6 @@
 	<string name="recipes_next_button_text">Next</string>
 	<string name="recipes_add_recipe_activity_title">Fooding : Add Recipe</string>
 	<string name="recipes_todo_add_instructions_text">[Todo: add recipe instructions]</string>
+	
+	<string name="select_product_activity_label">Fooding : Select Products</string>
 </resources>

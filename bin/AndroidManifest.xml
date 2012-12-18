@@ -44,6 +44,9 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".SelectProductActivity"
+            android:label="@string/select_product_activity_label" />
     </application>
 
 </manifest>

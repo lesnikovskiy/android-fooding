@@ -6,6 +6,7 @@ import android.app.ListActivity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -36,6 +37,7 @@ public class RecipesActivity extends ListActivity {
 		db.open();
 		
 		List<Recipe> recipes = db.getRecipes();
+		Log.d(TAG, String.format("Retrieved %s number of recipes", recipes.size()));
 		
 		if (recipes.size() > 0) {
 			RecipeArrayAdapter adapter = 
@@ -61,6 +63,8 @@ public class RecipesActivity extends ListActivity {
 	}
 	
 	private class RecipeArrayAdapter extends ArrayAdapter<Recipe> {
+		static final private String TAG = "RecipeArrayAdapter";
+		
 		private int resource;
 		
 		public RecipeArrayAdapter(Context context, int resource, List<Recipe> recipes) {
@@ -74,6 +78,8 @@ public class RecipesActivity extends ListActivity {
 			
 			if (convertView == null) {
 				view = new LinearLayout(getContext());
+				view.setOrientation(LinearLayout.VERTICAL);		
+				
 				LayoutInflater inflater = 
 						(LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 				inflater.inflate(resource, view);
@@ -83,8 +89,12 @@ public class RecipesActivity extends ListActivity {
 			
 			Recipe recipe = getItem(position);
 			
+			Log.d(TAG, 
+					String.format("Recipe retrieved at position %s: %s - %s", 
+							position, recipe.getId(), recipe.getName()));
+			
 			TextView idTV = new TextView(getContext());
-			idTV.setVisibility(View.GONE);
+			//idTV.setVisibility(View.GONE);
 			idTV.setText(String.valueOf(recipe.getId()));
 			view.addView(idTV);
 			

@@ -39,7 +39,7 @@ public class EventsActivity extends ListActivity {
 		if (events.size() > 0) {
 			arrayAdapter = 
 					new EventsArrayAdapter(getApplicationContext(), 
-							android.R.layout.simple_list_item_1, dbAdapter.getEvents());
+							android.R.layout.simple_list_item_1, events);
 			setListAdapter(arrayAdapter);
 		}
 	}
