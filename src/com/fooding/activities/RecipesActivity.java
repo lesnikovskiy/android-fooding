@@ -1,37 +1,41 @@
 package com.fooding.activities;
 
+import java.util.ArrayList;
 import java.util.List;
 
-import android.app.ListActivity;
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewGroup.LayoutParams;
 import android.widget.ArrayAdapter;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
 import com.fooding.adapters.RecipeDbAdapter;
 import com.fooding.models.Recipe;
 
-public class RecipesActivity extends ListActivity {
+public class RecipesActivity extends Activity {
 	static final private String TAG = "RecipesActivity";
 	static final private int MENU_ADD = 100;
+	static final private int CALC_ITEM = 200;
 	
 	private RecipeDbAdapter db;
+	private ListView recipesListView;
+	private RecipeArrayAdapter adapter;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		ListView listView = (ListView) getListView();
-		listView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
+		setContentView(R.layout.recipes_layout);
+		
+		recipesListView = (ListView) findViewById(R.id.recipes_list_view);
 		
 		db = new RecipeDbAdapter(getApplicationContext());
 		db.open();
@@ -40,10 +44,10 @@ public class RecipesActivity extends ListActivity {
 		Log.d(TAG, String.format("Retrieved %s number of recipes", recipes.size()));
 		
 		if (recipes.size() > 0) {
-			RecipeArrayAdapter adapter = 
-					new RecipeArrayAdapter(getApplicationContext(), 
-							android.R.layout.simple_list_item_multiple_choice, recipes);
-			setListAdapter(adapter);
+			adapter = new RecipeArrayAdapter(getApplicationContext(), 
+							R.layout.select_recipe_layout, recipes);
+			recipesListView.setAdapter(adapter);
+			recipesListView.setItemsCanFocus(false);
 		}
 	}
 	
@@ -53,7 +57,30 @@ public class RecipesActivity extends ListActivity {
 		addItem.setShortcut('0', 'a');
 		addItem.setIntent(new Intent(getApplicationContext(), AddRecipeActivity.class));
 		
+		MenuItem calcRecipe = menu.add(0, CALC_ITEM, Menu.NONE, R.string.recipes_calc_recipes);
+		calcRecipe.setShortcut('1', 'c');
+		
 		return super.onCreateOptionsMenu(menu);
+	}
+	
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch(item.getItemId()) {
+		case CALC_ITEM:
+			List<Recipe> selectedRecipes = new ArrayList<Recipe>();
+			final SparseBooleanArray checkedItems = recipesListView.getCheckedItemPositions();
+			for (int i = 0; i < checkedItems.size(); i++) {
+				int position = checkedItems.keyAt(i);
+				if (checkedItems.valueAt(i)) {
+					selectedRecipes.add(adapter.getItem(position));
+					Log.d(TAG, "selected item: " + adapter.getItem(position).getName());
+				}
+			}
+			 
+			return true;
+		}
+		
+		return super.onOptionsItemSelected(item);
 	}
 	
 	@Override
@@ -65,51 +92,46 @@ public class RecipesActivity extends ListActivity {
 	private class RecipeArrayAdapter extends ArrayAdapter<Recipe> {
 		static final private String TAG = "RecipeArrayAdapter";
 		
+		private View view;
+		private Context context;
 		private int resource;
+		private List<Recipe> recipes;		
+		
 		
 		public RecipeArrayAdapter(Context context, int resource, List<Recipe> recipes) {
 			super(context, resource, recipes);
+			
+			this.context = context;
 			this.resource = resource;
+			this.recipes = recipes;			
 		}
 		
 		@Override
 		public View getView(int position, View convertView, ViewGroup parent) {
-			LinearLayout view;			
+			view = convertView;			
 			
-			if (convertView == null) {
-				view = new LinearLayout(getContext());
-				view.setOrientation(LinearLayout.VERTICAL);		
-				
+			if (view == null) {				
 				LayoutInflater inflater = 
-						(LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-				inflater.inflate(resource, view);
-			} else {
-				view = (LinearLayout) convertView;
+						(LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+				view = inflater.inflate(resource, parent, false);
 			}
 			
-			Recipe recipe = getItem(position);
+			Recipe recipe = recipes.get(position);
 			
-			Log.d(TAG, 
-					String.format("Recipe retrieved at position %s: %s - %s", 
-							position, recipe.getId(), recipe.getName()));
-			
-			TextView idTV = new TextView(getContext());
-			//idTV.setVisibility(View.GONE);
-			idTV.setText(String.valueOf(recipe.getId()));
-			view.addView(idTV);
-			
-			TextView tv = new TextView(getContext());
-			tv.setText(recipe.getName());
-			
-			LinearLayout.LayoutParams params =
-					new LinearLayout.LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT);
-			params.leftMargin = 25;
-			
-			tv.setLayoutParams(params);
-			
-			view.addView(tv);
+			if (recipe != null) {
+				Log.d(TAG, 
+						String.format("Recipe retrieved at position %s: %s - %s", 
+								position, recipe.getId(), recipe.getName()));
+				TextView idTextView = (TextView) view.findViewById(R.id.recipe_id);
+				if (idTextView != null)
+					idTextView.setText(String.valueOf(recipe.getId()));
+				
+				TextView nameTextView = (TextView) view.findViewById(R.id.recipe_name);
+				if (nameTextView != null)
+					nameTextView.setText(recipe.getName());
+			}	
 			
 			return view;
 		}
-	}
+	}	
 }

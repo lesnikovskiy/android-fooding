@@ -3,7 +3,7 @@ package com.fooding.utils;
 public final class RecipeConsts extends DbConsts {	
 	static final public String R_ID = "id";
 	static final public String R_NAME = "name";
-	static final public String R_INSTRUCTIONS = "name";
+	static final public String R_INSTRUCTIONS = "instructions";
 	
 	static final public int COLUMN_ID = 0;
 	static final public int COLUMN_NAME = 1;
