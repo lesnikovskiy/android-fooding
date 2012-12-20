@@ -24,7 +24,7 @@ import android.util.Log;
 import com.fooding.contracts.EventsDbContract;
 import com.fooding.models.Event;
 
-public class EventsDbAdapter implements EventsDbContract {
+public class EventsDbAdapter extends DbAdapter implements EventsDbContract {
 	static final private String TAG = "EventsDbAdapter";
 	
 	private final OpenHelper openHelper;
@@ -97,4 +97,17 @@ public class EventsDbAdapter implements EventsDbContract {
 		
 		return db.delete(EVENTS_TABLE, whereClause, null) > 0;
 	}	
+	
+	@Override
+	protected SQLiteDatabase getDatabase() {
+		SQLiteDatabase db = null;
+		
+		try {
+			db = openHelper.getReadableDatabase();
+		} catch (SQLiteException e) {
+			Log.e(TAG, String.format("open() thrown SQLiteException: %s", e.getMessage()));
+		}
+		
+		return db;
+	}
 }

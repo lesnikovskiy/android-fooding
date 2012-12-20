@@ -35,7 +35,7 @@ import com.fooding.contracts.RecipesContract;
 import com.fooding.models.Product;
 import com.fooding.models.Recipe;
 
-public class RecipeDbAdapter implements RecipesContract {
+public class RecipeDbAdapter extends DbAdapter implements RecipesContract {
 	final static private String TAG = "RecipeDbAdapter";
 	
 	private final OpenHelper openHelper;
@@ -156,5 +156,18 @@ public class RecipeDbAdapter implements RecipesContract {
 		values.put(PRODUCT_ID, productId);
 		
 		return db.insert(RECIPES_PRODUCTS, null, values) > 0;
+	}
+
+	@Override
+	protected SQLiteDatabase getDatabase() {
+		SQLiteDatabase db = null;
+		
+		try {
+			db = openHelper.getReadableDatabase();
+		} catch (SQLiteException e) {
+			Log.e(TAG, String.format("open() thrown SQLiteException: %s", e.getMessage()));
+		}
+		
+		return db;
 	}
 }

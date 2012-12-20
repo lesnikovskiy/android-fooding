@@ -1,6 +1,7 @@
 package com.fooding.activities;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -10,6 +11,8 @@ import android.widget.EditText;
 
 import com.fooding.adapters.RecipeDbAdapter;
 import com.fooding.models.Recipe;
+
+import static com.fooding.utils.DbConsts.RECIPES_TABLE;
 
 public class AddRecipeActivity extends Activity implements OnClickListener {
 	static final private String TAG = "AddRecipeActivity";
@@ -40,6 +43,14 @@ public class AddRecipeActivity extends Activity implements OnClickListener {
 			} else {
 				Log.e(TAG, "recipe wasn't saved!");
 			}
+			
+			long recipeId = db.getLastInsertedId(RECIPES_TABLE);
+			Log.e(TAG, String.format("Retrieved last recipe inserted id: %s", recipeId));
+			
+			Intent intent = new Intent(getApplicationContext(), SelectProductActivity.class);
+			intent.putExtra("recipeId", recipeId);
+			startActivity(intent);
+			
 			break;
 		}
 	}

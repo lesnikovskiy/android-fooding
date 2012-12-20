@@ -5,7 +5,10 @@
     android:orientation="vertical">
     
     <AutoCompleteTextView 
-        android:id="@+id/select_product_autocomplete" />
+        android:id="@+id/select_product_autocomplete"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:hint="Select product" />
     
     <ListView 
         android:id="@+id/selected_products_list"

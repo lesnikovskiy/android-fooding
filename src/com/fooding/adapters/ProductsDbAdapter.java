@@ -23,7 +23,7 @@ import android.util.Log;
 import com.fooding.contracts.ProductDbContract;
 import com.fooding.models.Product;
 
-public class ProductsDbAdapter implements ProductDbContract {
+public class ProductsDbAdapter extends DbAdapter implements ProductDbContract {
 	static final private String TAG = "ProductsDbAdapter";
 	
 	private final OpenHelper openHelper;
@@ -103,5 +103,18 @@ public class ProductsDbAdapter implements ProductDbContract {
 		Log.d(TAG, String.format("whereClause = %s", whereClause));
 		
 		return database.delete(PRODUCTS_TABLE, whereClause, null) > 0;
+	}
+	
+	@Override
+	protected SQLiteDatabase getDatabase() {
+		SQLiteDatabase db = null;
+		
+		try {
+			db = openHelper.getReadableDatabase();
+		} catch (SQLiteException e) {
+			Log.e(TAG, String.format("open() thrown SQLiteException: %s", e.getMessage()));
+		}
+		
+		return db;
 	}
 }
