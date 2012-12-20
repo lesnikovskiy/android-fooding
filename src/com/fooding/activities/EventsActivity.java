@@ -12,6 +12,7 @@ import android.view.MenuItem;
 
 import com.fooding.adapters.EventsArrayAdapter;
 import com.fooding.adapters.EventsDbAdapter;
+import com.fooding.contracts.EventsDbContract;
 import com.fooding.models.Event;
 
 public class EventsActivity extends ListActivity {
@@ -19,7 +20,7 @@ public class EventsActivity extends ListActivity {
 	
 	private final static int MENU_ADD = 100;
 	
-	private EventsDbAdapter dbAdapter;
+	private EventsDbContract dbAdapter;
 	private EventsArrayAdapter arrayAdapter;
 	
 	@Override

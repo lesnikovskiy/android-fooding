@@ -37,16 +37,16 @@ public final class R {
         public static final int product_price=0x7f070004;
         public static final int products=0x7f070013;
         public static final int purchase_list_button=0x7f07000d;
-        public static final int recipe_id=0x7f070018;
+        public static final int recipe_id=0x7f070015;
         public static final int recipe_name=0x7f070000;
         public static final int recipes_button=0x7f07000e;
         public static final int recipes_list_view=0x7f070014;
         public static final int removeProductButton=0x7f070007;
         public static final int saveProductButton=0x7f070006;
         public static final int save_event_button=0x7f07000b;
-        public static final int select_checkbox=0x7f070017;
-        public static final int select_product_autocomplete=0x7f070015;
-        public static final int selected_products_list=0x7f070016;
+        public static final int select_checkbox=0x7f070018;
+        public static final int select_product_autocomplete=0x7f070016;
+        public static final int selected_products_list=0x7f070017;
     }
     public static final class layout {
         public static final int add_recipe_layout=0x7f030000;

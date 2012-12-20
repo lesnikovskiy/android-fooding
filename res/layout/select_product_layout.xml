@@ -4,11 +4,23 @@
     android:layout_height="fill_parent"
     android:orientation="vertical">
     
+    <TextView 
+        android:id="@+id/recipe_id"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone"/>
+    
     <AutoCompleteTextView 
         android:id="@+id/select_product_autocomplete"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:hint="Select product" />
+    
+    <EditText
+        android:id="@+id/product_price"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:hint="Enter price" />
     
     <ListView 
         android:id="@+id/selected_products_list"

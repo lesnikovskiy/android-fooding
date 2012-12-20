@@ -13,12 +13,13 @@ import android.widget.DatePicker;
 import android.widget.TextView;
 
 import com.fooding.adapters.EventsDbAdapter;
+import com.fooding.contracts.EventsDbContract;
 import com.fooding.models.Event;
 
 public class AddEventActivity extends Activity implements OnClickListener {
 	private static final String TAG = "AddEventActivity";
 	
-	private EventsDbAdapter db;
+	private EventsDbContract db;
 	private TextView nameTextView;
 	private DatePicker dp;
 	

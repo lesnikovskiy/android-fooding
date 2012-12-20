@@ -10,15 +10,15 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import com.fooding.adapters.RecipeDbAdapter;
+import com.fooding.contracts.RecipesContract;
 import com.fooding.models.Recipe;
 
-import static com.fooding.utils.DbConsts.RECIPES_TABLE;
-
 public class AddRecipeActivity extends Activity implements OnClickListener {
-	static final private String TAG = "AddRecipeActivity";
+	static final private String TAG = "AddRecipeActivity";	
+	static final private String RECIPE_ID_KEY = "recipeId";
 	
 	private EditText recipeNameText;
-	private RecipeDbAdapter db;
+	private RecipesContract db;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -44,11 +44,11 @@ public class AddRecipeActivity extends Activity implements OnClickListener {
 				Log.e(TAG, "recipe wasn't saved!");
 			}
 			
-			long recipeId = db.getLastInsertedId(RECIPES_TABLE);
-			Log.e(TAG, String.format("Retrieved last recipe inserted id: %s", recipeId));
+			long recipeId = db.getLastInsertId();
+			Log.w(TAG, String.format("Retrieved last recipe inserted id: %s", recipeId));
 			
 			Intent intent = new Intent(getApplicationContext(), SelectProductActivity.class);
-			intent.putExtra("recipeId", recipeId);
+			intent.putExtra(RECIPE_ID_KEY, recipeId);
 			startActivity(intent);
 			
 			break;

@@ -35,8 +35,12 @@ import com.fooding.contracts.RecipesContract;
 import com.fooding.models.Product;
 import com.fooding.models.Recipe;
 
-public class RecipeDbAdapter extends DbAdapter implements RecipesContract {
+public class RecipeDbAdapter implements RecipesContract {
 	final static private String TAG = "RecipeDbAdapter";
+	
+	private static final String SQLITE_SEQUENCE = "sqlite_sequence";
+	private static final String SELECTION = "name = ?";
+	private static final String SEQ = "seq";
 	
 	private final OpenHelper openHelper;
 	private SQLiteDatabase db;
@@ -133,6 +137,24 @@ public class RecipeDbAdapter extends DbAdapter implements RecipesContract {
 		
 		return db.insert(RECIPES_TABLE, null, values) > 0;
 	}
+	
+	public long getLastInsertId() {
+		long index = -1;
+		
+		SQLiteDatabase db = openHelper.getReadableDatabase();
+		if (db == null)
+			throw new NullPointerException("SQLiteDatabase is null. Override getDatabase() method correctly.");
+		
+		Cursor c = db.query(SQLITE_SEQUENCE, 
+				new String[] {SEQ}, 
+				SELECTION, 
+				new String[] {RECIPES_TABLE}, null, null, null);
+		if (c.moveToFirst()) {
+			index = c.getLong(c.getColumnIndex(SEQ));
+		}
+		
+		return index;
+	}
 
 	public boolean updateRecipe(Recipe recipe) {
 		ContentValues values = new ContentValues();
@@ -156,18 +178,5 @@ public class RecipeDbAdapter extends DbAdapter implements RecipesContract {
 		values.put(PRODUCT_ID, productId);
 		
 		return db.insert(RECIPES_PRODUCTS, null, values) > 0;
-	}
-
-	@Override
-	protected SQLiteDatabase getDatabase() {
-		SQLiteDatabase db = null;
-		
-		try {
-			db = openHelper.getReadableDatabase();
-		} catch (SQLiteException e) {
-			Log.e(TAG, String.format("open() thrown SQLiteException: %s", e.getMessage()));
-		}
-		
-		return db;
 	}
 }

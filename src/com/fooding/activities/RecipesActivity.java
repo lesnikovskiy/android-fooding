@@ -19,6 +19,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.fooding.adapters.RecipeDbAdapter;
+import com.fooding.contracts.RecipesContract;
 import com.fooding.models.Recipe;
 
 public class RecipesActivity extends Activity {
@@ -26,7 +27,7 @@ public class RecipesActivity extends Activity {
 	static final private int MENU_ADD = 100;
 	static final private int CALC_ITEM = 200;
 	
-	private RecipeDbAdapter db;
+	private RecipesContract db;
 	private ListView recipesListView;
 	private RecipeArrayAdapter adapter;
 	
