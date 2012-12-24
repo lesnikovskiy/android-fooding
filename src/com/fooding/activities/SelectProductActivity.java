@@ -50,27 +50,32 @@ public class SelectProductActivity extends Activity {
 		
 		recipeIdTextView = (TextView) findViewById(R.id.recipe_id);
 		priceEditText = (EditText) findViewById(R.id.product_price);
-		productNameAutocomplete = (AutoCompleteTextView) findViewById(R.id.product_name);
+		productNameAutocomplete = (AutoCompleteTextView) findViewById(R.id.select_product_autocomplete);
 		selectedProductList = (ListView) findViewById(R.id.selected_products_list);
 		
-		List<Recipe> recipes = new ArrayList<Recipe>();
-		recipes.add(new Recipe(1, "Borsch"));
-		recipes.add(new Recipe(2, "Weak reference"));
-		customAdapter = 
-				new CustomArrayAdapter(getApplicationContext(), R.layout.autocomplete_adapter_layout, recipes);
-		productNameAutocomplete.setAdapter(customAdapter);
+//		final String[] mRecipes = {"Carrot","Onion","Potatoes"};
+//		productNameAutocomplete.setAdapter(
+//				new ArrayAdapter<String>(this, android.R.layout.simple_dropdown_item_1line, mRecipes));
 		
-//		// init cursor
-//		db = new ProductsDbAdapter(this);
-//		cursor = db.getProductFindCursor("");
-//		
-//		startManagingCursor(cursor);
-//		
-//		customCursor = new CustomCursorAdapter(getApplicationContext(), cursor);
-//		
-//		// attach to adapter
-//		productNameAutocomplete.setAdapter(customCursor);
-//		productNameAutocomplete.setThreshold(1);
+//		List<Recipe> recipes = new ArrayList<Recipe>();
+//		recipes.add(new Recipe(1, "Borsch"));
+//		recipes.add(new Recipe(2, "Weak reference"));
+//		customAdapter = 
+//				new CustomArrayAdapter(getApplicationContext(), R.layout.autocomplete_adapter_layout, recipes);
+//		productNameAutocomplete.setAdapter(customAdapter);
+		
+		// init cursor
+		db = new ProductsDbAdapter(this);
+		db.open();
+		cursor = db.getProductFindCursor("");
+		
+		startManagingCursor(cursor);
+		
+		customCursor = new CustomCursorAdapter(getApplicationContext(), cursor);
+		
+		// attach to adapter
+		productNameAutocomplete.setAdapter(customCursor);
+		productNameAutocomplete.setThreshold(1);
 	}
 	
 	@Override

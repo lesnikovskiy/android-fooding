@@ -14,6 +14,7 @@
         android:id="@+id/select_product_autocomplete"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
+        android:completionThreshold="1"
         android:hint="Select product" />
     
     <EditText
