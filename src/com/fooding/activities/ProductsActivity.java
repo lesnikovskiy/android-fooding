@@ -57,6 +57,7 @@ public class ProductsActivity extends Activity implements OnItemClickListener  {
 			listView = (ListView) findViewById(R.id.products);
 			productsArrayAdapter = new ProductArrayAdapter(this, R.layout.product_list_item, products);
 			listView.setAdapter(this.productsArrayAdapter);
+			listView.setItemsCanFocus(false);
 			listView.setOnItemClickListener(this);
 		}
 	}

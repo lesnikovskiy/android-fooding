@@ -98,17 +98,19 @@ public final class R {
         public static final int product_price_label=0x7f04000b;
         public static final int products_title=0x7f040008;
         public static final int recipes_activity_title=0x7f040019;
-        public static final int recipes_add_recipe_activity_title=0x7f04001d;
+        public static final int recipes_add_recipe_activity_title=0x7f040020;
         public static final int recipes_add_recipe_menu_item=0x7f04001a;
-        public static final int recipes_auto_select_product_hint=0x7f040020;
-        public static final int recipes_calc_recipes=0x7f04001f;
-        public static final int recipes_enter_price_hint=0x7f040021;
-        public static final int recipes_name_hint=0x7f04001b;
-        public static final int recipes_next_button_text=0x7f04001c;
-        public static final int recipes_todo_add_instructions_text=0x7f04001e;
+        public static final int recipes_auto_select_product_hint=0x7f040022;
+        public static final int recipes_create_list_menu_item=0x7f04001d;
+        public static final int recipes_delete_selected_menu_item=0x7f04001c;
+        public static final int recipes_edit_recipe_menu_item=0x7f04001b;
+        public static final int recipes_enter_price_hint=0x7f040023;
+        public static final int recipes_name_hint=0x7f04001e;
+        public static final int recipes_next_button_text=0x7f04001f;
+        public static final int recipes_todo_add_instructions_text=0x7f040021;
         public static final int remove_product_button=0x7f040010;
         public static final int save_product_button=0x7f04000f;
-        public static final int select_product_activity_label=0x7f040022;
+        public static final int select_product_activity_label=0x7f040024;
     }
     public static final class style {
         public static final int AppTheme=0x7f050000;

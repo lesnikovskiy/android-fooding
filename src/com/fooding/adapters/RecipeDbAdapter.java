@@ -29,6 +29,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
+import android.text.TextUtils;
 import android.util.Log;
 
 import com.fooding.contracts.RecipesContract;
@@ -170,6 +171,14 @@ public class RecipeDbAdapter implements RecipesContract {
 		String whereClause = String.format("%s = %s", R_ID, recipeId);
 		
 		return db.delete(RECIPES_TABLE, whereClause, null) > 0;
+	}
+	
+	public int deleteRecipeBundle (String[] recipeIds) {
+		String commaSeperatedIds = TextUtils.join(",", recipeIds);
+		String sql = String.format("DELETE FROM %s WHERE id in (%s)", RECIPES_TABLE, commaSeperatedIds);
+		Cursor c = db.rawQuery(sql, null);
+		
+		return c.getInt(0);
 	}
 
 	public boolean addProductToRecipe(long productId, long recipeId) {

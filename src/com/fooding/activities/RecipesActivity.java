@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import android.app.Activity;
+import android.app.LauncherActivity.ListItem;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -22,10 +23,15 @@ import com.fooding.adapters.RecipeDbAdapter;
 import com.fooding.contracts.RecipesContract;
 import com.fooding.models.Recipe;
 
-public class RecipesActivity extends Activity {
+public class RecipesActivity extends Activity {	
 	static final private String TAG = "RecipesActivity";
-	static final private int MENU_ADD = 100;
-	static final private int CALC_ITEM = 200;
+	
+	static final private int DEFAULT_GROUP = 0;
+	
+	static final private int ADD_RECIPE_ITEM = 100;
+	static final private int EDIT_RECIPE_ITEM = 110;
+	static final private int DELETE_SELECTED_ITEM = 120;
+	static final private int CREATE_LIST_ITEM = 130;
 	
 	private RecipesContract db;
 	private ListView recipesListView;
@@ -54,12 +60,13 @@ public class RecipesActivity extends Activity {
 	
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {	
-		MenuItem addItem = menu.add(0, MENU_ADD, Menu.NONE, R.string.recipes_add_recipe_menu_item);
-		addItem.setShortcut('0', 'a');
-		addItem.setIntent(new Intent(getApplicationContext(), AddRecipeActivity.class));
+		menu.add(DEFAULT_GROUP, ADD_RECIPE_ITEM, Menu.NONE, R.string.recipes_add_recipe_menu_item)
+			.setShortcut('0', 'a')
+			.setIntent(new Intent(getApplicationContext(), AddRecipeActivity.class));
 		
-		MenuItem calcRecipe = menu.add(0, CALC_ITEM, Menu.NONE, R.string.recipes_calc_recipes);
-		calcRecipe.setShortcut('1', 'c');
+		menu.add(DEFAULT_GROUP, EDIT_RECIPE_ITEM, Menu.NONE, R.string.recipes_edit_recipe_menu_item);
+		menu.add(DEFAULT_GROUP, DELETE_SELECTED_ITEM, Menu.NONE, R.string.recipes_delete_selected_menu_item);		
+		menu.add(DEFAULT_GROUP, CREATE_LIST_ITEM, Menu.NONE, R.string.recipes_create_list_menu_item).setShortcut('1', 'c');
 		
 		return super.onCreateOptionsMenu(menu);
 	}
@@ -67,27 +74,54 @@ public class RecipesActivity extends Activity {
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch(item.getItemId()) {
-		case CALC_ITEM:
-			List<Recipe> selectedRecipes = new ArrayList<Recipe>();
-			final SparseBooleanArray checkedItems = recipesListView.getCheckedItemPositions();
-			for (int i = 0; i < checkedItems.size(); i++) {
-				int position = checkedItems.keyAt(i);
-				if (checkedItems.valueAt(i)) {
-					selectedRecipes.add(adapter.getItem(position));
-					Log.d(TAG, "selected item: " + adapter.getItem(position).getName());
+		case DELETE_SELECTED_ITEM: 
+			List<Recipe> recipesToDelete = getSelectedRecipes();
+			for (Recipe r : recipesToDelete) {
+				if (r.getId() > 0) {
+					db.deleteRecipe(r.getId());					
+					adapter.remove(r);			
+					
+					Log.d(TAG, String.format("Recipe deleted: [%s %s]", r.getId(), r.getName()));
+				} else {
+					Log.e(TAG, String.format("Recipe id = %s", r.getId()));
 				}
 			}
-			 
+			
+			adapter.notifyDataSetChanged();
+			break;
+		case CREATE_LIST_ITEM:
+			List<Recipe> selectedRecipes = getSelectedRecipes();	
+			for (Recipe r : selectedRecipes) {
+				if (r.getId() > 0) {
+					Log.d(TAG, String.format("Recipe selected: [%s %s]", r.getId(), r.getName()));
+				} else {
+					Log.e(TAG, String.format("Recipe id = %s", r.getId()));
+				}
+			}
 			return true;
 		}
 		
 		return super.onOptionsItemSelected(item);
-	}
+	}	
 	
 	@Override
 	protected void onDestroy() {
 		db.close();
 		super.onDestroy();
+	}
+	
+	private List<Recipe> getSelectedRecipes() {
+		List<Recipe> recipes = new ArrayList<Recipe>();
+		
+		final SparseBooleanArray checkedItems = recipesListView.getCheckedItemPositions();
+		for (int i = 0; i < checkedItems.size(); i++) {
+			int position = checkedItems.keyAt(i);
+			if (checkedItems.valueAt(i)) {
+				recipes.add(adapter.getItem(position));
+			}
+		}
+		
+		return recipes;
 	}
 	
 	private class RecipeArrayAdapter extends ArrayAdapter<Recipe> {

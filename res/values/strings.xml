@@ -35,11 +35,13 @@
 	
 	<string name="recipes_activity_title">Fooding : Recipes</string>
 	<string name="recipes_add_recipe_menu_item">Add Recipe</string>
+	<string name="recipes_edit_recipe_menu_item">Edit Recipe</string>
+	<string name="recipes_delete_selected_menu_item">Delete Selected</string>
+	<string name="recipes_create_list_menu_item">Create Purchase List</string>
 	<string name="recipes_name_hint">Enter recipe name</string>
 	<string name="recipes_next_button_text">Next</string>
 	<string name="recipes_add_recipe_activity_title">Fooding : Add Recipe</string>
-	<string name="recipes_todo_add_instructions_text">[Todo: add recipe instructions]</string>
-	<string name="recipes_calc_recipes">Produce products by menu</string>
+	<string name="recipes_todo_add_instructions_text">[Todo: add recipe instructions]</string>	
 	<string name="recipes_auto_select_product_hint">Select product</string>
 	<string name="recipes_enter_price_hint">Enter price</string>
 	
