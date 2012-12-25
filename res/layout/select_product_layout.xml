@@ -11,20 +11,22 @@
         android:visibility="gone"/>
     
     <AutoCompleteTextView 
+        style="@style/FontStyle"
         android:id="@+id/select_product_autocomplete"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:completionThreshold="1"
-        android:hint="Select product" />
+        android:hint="@string/recipes_auto_select_product_hint" />
     
     <EditText
         android:id="@+id/product_price"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:hint="Enter price" />
+        android:hint="@string/recipes_enter_price_hint" />
     
     <ListView 
         android:id="@+id/selected_products_list"
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:choiceMode="multipleChoice" />
 </LinearLayout>

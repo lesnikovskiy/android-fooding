@@ -11,19 +11,22 @@ import static com.fooding.utils.ProductConstants.PRICE;
 import java.util.List;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.database.sqlite.SQLiteException;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.fooding.adapters.ProductArrayAdapter;
 import com.fooding.adapters.ProductsDbAdapter;
 import com.fooding.contracts.ProductDbContract;
 import com.fooding.models.Product;
@@ -123,9 +126,9 @@ public class ProductsActivity extends Activity implements OnItemClickListener  {
 
 	public void onItemClick(AdapterView<?> adapter, View view, int position, long id) {
 		View v = listView.getChildAt(position);
-		TextView productIdText = (TextView) v.findViewById(R.id.product_id);
-		TextView nameText = (TextView) v.findViewById(R.id.name);
-		TextView priceText = (TextView) v.findViewById(R.id.price);
+		TextView productIdText = (TextView) v.findViewById(R.id.checkable_product_id);
+		TextView nameText = (TextView) v.findViewById(R.id.checkable_product_name);
+		TextView priceText = (TextView) v.findViewById(R.id.checkable_product_price);
 		
 		Intent intent = new Intent(v.getContext(), EditProductActivity.class);
 		intent.putExtra(EDIT_FLAG, true);
@@ -142,5 +145,50 @@ public class ProductsActivity extends Activity implements OnItemClickListener  {
 	
 	private final List<Product> getProductListFromDb() {		
 		return db.getProducts();
+	}
+	
+	private class ProductArrayAdapter extends ArrayAdapter<Product> {
+		private View view;
+		private Context context;
+		private int resource;
+		private List<Product> products;		
+		
+		
+		public ProductArrayAdapter (Context context, int resource, List<Product> products) {
+			super(context, resource, products);
+			
+			this.context = context;
+			this.resource = resource;
+			this.products = products;		
+		}
+		
+		@Override
+		public View getView(int position, View convertView, ViewGroup parent) {
+			view = convertView;
+			
+			if (view == null) {
+				LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+				view = inflater.inflate(resource, parent, false);
+			}
+			
+			Product product = products.get(position);
+			
+			if (product == null)
+				return view;
+			
+			TextView idTextView = (TextView) view.findViewById(R.id.checkable_product_id);
+			if (idTextView != null)
+				idTextView.setText(String.valueOf(product.getId()));
+			
+			TextView nameTextView = (TextView) view.findViewById(R.id.checkable_product_name);
+			if (nameTextView != null)
+				nameTextView.setText(product.getName());
+			
+			TextView priceTextView = (TextView) view.findViewById(R.id.checkable_product_price);
+			if (priceTextView != null)
+				priceTextView.setText(String.valueOf(product.getPrice()));
+				
+			return view;
+		}
 	}
 }

@@ -7,9 +7,12 @@ import android.app.Activity;
 import android.content.Context;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.CursorAdapter;
@@ -20,9 +23,9 @@ import android.widget.Toast;
 
 import com.fooding.adapters.ProductsDbAdapter;
 import com.fooding.contracts.ProductDbContract;
-import com.fooding.models.Recipe;
+import com.fooding.models.Product;
 
-public class SelectProductActivity extends Activity {
+public class SelectProductActivity extends Activity implements OnItemClickListener {
 	static final private String TAG = "SelectProductActivity";
 	
 	static final private String RECIPE_ID_KEY = "recipeId";
@@ -36,6 +39,8 @@ public class SelectProductActivity extends Activity {
 	private CustomCursorAdapter customCursor;
 	private Cursor cursor;
 	private CustomArrayAdapter customAdapter;
+	
+	private List<Product> selectedProducts;
 		
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -49,21 +54,16 @@ public class SelectProductActivity extends Activity {
 		}
 		
 		recipeIdTextView = (TextView) findViewById(R.id.recipe_id);
+		recipeIdTextView.setText(String.valueOf(id));
 		priceEditText = (EditText) findViewById(R.id.product_price);
 		productNameAutocomplete = (AutoCompleteTextView) findViewById(R.id.select_product_autocomplete);
-		selectedProductList = (ListView) findViewById(R.id.selected_products_list);
+		selectedProductList = (ListView) findViewById(R.id.selected_products_list);	
 		
-//		final String[] mRecipes = {"Carrot","Onion","Potatoes"};
-//		productNameAutocomplete.setAdapter(
-//				new ArrayAdapter<String>(this, android.R.layout.simple_dropdown_item_1line, mRecipes));
+		selectedProducts = new ArrayList<Product>();
 		
-//		List<Recipe> recipes = new ArrayList<Recipe>();
-//		recipes.add(new Recipe(1, "Borsch"));
-//		recipes.add(new Recipe(2, "Weak reference"));
-//		customAdapter = 
-//				new CustomArrayAdapter(getApplicationContext(), R.layout.autocomplete_adapter_layout, recipes);
-//		productNameAutocomplete.setAdapter(customAdapter);
-		
+		customAdapter = new CustomArrayAdapter(getApplicationContext(), R.layout.product_list_item, selectedProducts);
+		selectedProductList.setAdapter(customAdapter);
+	
 		// init cursor
 		db = new ProductsDbAdapter(this);
 		db.open();
@@ -76,28 +76,62 @@ public class SelectProductActivity extends Activity {
 		// attach to adapter
 		productNameAutocomplete.setAdapter(customCursor);
 		productNameAutocomplete.setThreshold(1);
+		productNameAutocomplete.setOnItemClickListener(this);
 	}
 	
 	@Override
 	protected void onDestroy() {
-		super.onDestroy();
+		super.onDestroy();	
+		
 		db.close();
 		cursor.close();
+		customCursor.close();
+	}	
+	
+	public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+		Log.d(TAG, "onItemClick triggered.");
+		
+		long _id = -1;
+		String name = null;
+		double price = -1;
+		
+		TextView idTextView = (TextView) view.findViewById(R.id.auto_product_id);
+		if (idTextView != null) {
+			_id = Long.parseLong(idTextView.getText().toString());
+		}
+		
+		TextView nameTextView = (TextView) view.findViewById(R.id.auto_product_name);
+		if (nameTextView != null) {
+			name = nameTextView.getText().toString();
+			productNameAutocomplete.setText(name);
+		}
+		
+		TextView priceTextView = (TextView) view.findViewById(R.id.auto_product_price);
+		if (priceTextView != null){
+			String p = priceTextView.getText().toString();
+			priceEditText.setText(p);
+			price = Double.parseDouble(p);
+		}
+		
+		if (id > 0 && name != null) {
+			customAdapter.add(new Product(_id, name, price));
+			customAdapter.notifyDataSetChanged();
+		}
 	}
 	
-	private class CustomArrayAdapter extends ArrayAdapter<Recipe> {
+	private class CustomArrayAdapter extends ArrayAdapter<Product> {
 		private Context context;
 		private int resourceId;
-		private List<Recipe> recipes;
+		private List<Product> products;
 		
 		private View view;
 
-		public CustomArrayAdapter(Context context, int resourceId, List<Recipe> recipes) {
-			super(context, resourceId, recipes);
+		public CustomArrayAdapter(Context context, int resourceId, List<Product> products) {
+			super(context, resourceId, products);
 			
 			this.context = context;
 			this.resourceId = resourceId;
-			this.recipes = recipes;
+			this.products = products;
 		}
 		
 		@Override
@@ -110,16 +144,20 @@ public class SelectProductActivity extends Activity {
 				view = inflater.inflate(this.resourceId, parent, false);
 			}
 			
-			Recipe recipe = recipes.get(position);
+			Product product = products.get(position);
 			
-			if (recipe != null) {
-				TextView idTextView = (TextView) view.findViewById(R.id.auto_recipe_id);
+			if (product != null) {
+				TextView idTextView = (TextView) view.findViewById(R.id.checkable_product_id);
 				if (idTextView != null)
-					idTextView.setText(String.valueOf(recipe.getId()));
+					idTextView.setText(String.valueOf(product.getId()));
 				
-				TextView nameTextView = (TextView) view.findViewById(R.id.auto_recipe_name);
+				TextView nameTextView = (TextView) view.findViewById(R.id.checkable_product_name);
 				if (nameTextView != null) 
-					nameTextView.setText(recipe.getName());
+					nameTextView.setText(product.getName());
+				
+				TextView priceTextView = (TextView) view.findViewById(R.id.checkable_product_price);
+				if (priceTextView != null)
+					nameTextView.setText(String.valueOf(product.getPrice()));
 			}
 			
 			return view;
@@ -127,29 +165,67 @@ public class SelectProductActivity extends Activity {
 	}
 	
 	private class CustomCursorAdapter extends CursorAdapter {
+		static final private String TAG = "CustomCursorAdapter";
+		
+		static final private int COLUMN_ID = 0;
+		static final private int COLUMN_NAME = 1;
+		static final private int COLUMN_PRICE = 2;
+		
 		private ProductDbContract db = null;
 		
 		public CustomCursorAdapter(Context context, Cursor c) {
 			super(context, c);
 			
 			db = new ProductsDbAdapter(context);
+			try {
 			db.open();
+			} catch (Exception e) {
+				Log.e(TAG, e.getMessage());
+			}
 		}
 		
 		@Override
 		public void bindView(View view, Context context, Cursor cursor) {
-			String item = createItem(cursor);
-			((TextView) view).setText(item);
+			String id = cursor.getString(COLUMN_ID);
+			String name = cursor.getString(COLUMN_NAME);
+			String price = cursor.getString(COLUMN_PRICE);
+			
+			TextView idTextView = (TextView) view.findViewById(R.id.auto_product_id);
+			if (idTextView != null)
+				idTextView.setText(id);
+			
+			TextView nameTextView = (TextView) view.findViewById(R.id.auto_product_name);
+			if (nameTextView != null)
+				nameTextView.setText(name);
+			
+			TextView priceTextView = (TextView) view.findViewById(R.id.auto_product_price);
+			if (price != null)
+				priceTextView.setText(price);
 		}
 		
 		@Override
 		public View newView(Context context, Cursor cursor, ViewGroup parent) {
 			final LayoutInflater inflater = LayoutInflater.from(context);
-			final TextView view = 
-					(TextView) inflater.inflate(android.R.layout.simple_dropdown_item_1line, parent, false);
+			final View view = 
+					(View) inflater.inflate(R.layout.autocomplete_item_layout, parent, false);
 			
-			String item = createItem(cursor);
-			view.setText(item);
+			bindView(view, context, cursor);
+			
+//			String id = cursor.getString(COLUMN_ID);
+//			String name = cursor.getString(COLUMN_NAME);
+//			String price = cursor.getString(COLUMN_PRICE);
+//			
+//			TextView idTextView = (TextView) view.findViewById(R.id.auto_product_id);
+//			if (idTextView != null)
+//				idTextView.setText(id);
+//			
+//			TextView nameTextView = (TextView) view.findViewById(R.id.auto_product_name);
+//			if (nameTextView != null)
+//				nameTextView.setText(name);
+//			
+//			TextView priceTextView = (TextView) view.findViewById(R.id.auto_product_price);
+//			if (price != null)
+//				priceTextView.setText(price);
 			
 			return view;
 		}
@@ -173,13 +249,8 @@ public class SelectProductActivity extends Activity {
 			return currentCursor;
 		}
 		
-		private String createItem(Cursor cursor) {
-			String item = cursor.getString(1);
-			return item;
-		}
-		
 		public void close() {
 			db.close();
 		}
-	}
+	}		
 }

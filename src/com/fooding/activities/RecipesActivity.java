@@ -46,7 +46,7 @@ public class RecipesActivity extends Activity {
 		
 		if (recipes.size() > 0) {
 			adapter = new RecipeArrayAdapter(getApplicationContext(), 
-							R.layout.select_recipe_layout, recipes);
+							R.layout.checkable_item_layout, recipes);
 			recipesListView.setAdapter(adapter);
 			recipesListView.setItemsCanFocus(false);
 		}
@@ -123,11 +123,11 @@ public class RecipesActivity extends Activity {
 				Log.d(TAG, 
 						String.format("Recipe retrieved at position %s: %s - %s", 
 								position, recipe.getId(), recipe.getName()));
-				TextView idTextView = (TextView) view.findViewById(R.id.recipe_id);
+				TextView idTextView = (TextView) view.findViewById(R.id.checkable_id);
 				if (idTextView != null)
 					idTextView.setText(String.valueOf(recipe.getId()));
 				
-				TextView nameTextView = (TextView) view.findViewById(R.id.recipe_name);
+				TextView nameTextView = (TextView) view.findViewById(R.id.checkable_name);
 				if (nameTextView != null)
 					nameTextView.setText(recipe.getName());
 			}	

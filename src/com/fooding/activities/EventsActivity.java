@@ -3,14 +3,19 @@ package com.fooding.activities;
 import java.util.List;
 
 import android.app.ListActivity;
+import android.content.Context;
 import android.content.Intent;
 import android.database.sqlite.SQLiteException;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.TextView;
 
-import com.fooding.adapters.EventsArrayAdapter;
 import com.fooding.adapters.EventsDbAdapter;
 import com.fooding.contracts.EventsDbContract;
 import com.fooding.models.Event;
@@ -40,7 +45,7 @@ public class EventsActivity extends ListActivity {
 		if (events.size() > 0) {
 			arrayAdapter = 
 					new EventsArrayAdapter(getApplicationContext(), 
-							android.R.layout.simple_list_item_1, events);
+							R.layout.event_item_layout, events);
 			setListAdapter(arrayAdapter);
 		}
 	}
@@ -74,5 +79,47 @@ public class EventsActivity extends ListActivity {
 	protected void onDestroy() {
 		dbAdapter.close();
 		super.onDestroy();
+	}
+	
+	private class EventsArrayAdapter extends ArrayAdapter<Event> {			
+		private Context context;
+		private int resource;
+		private List<Event> events;
+		
+		private View view;
+		
+		public EventsArrayAdapter(Context context, int resource, List<Event> events) {
+			super(context, resource, events);
+			
+			this.context = context;
+			this.resource = resource;
+			this.events = events;
+		}
+		
+		@Override
+		public View getView(int position, View convertView, ViewGroup parent) {
+			view = convertView;
+			
+			if (view == null) {
+				LayoutInflater inflater = 
+						(LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+				this.view = inflater.inflate(resource, parent, false);
+			}
+			
+			Event event = events.get(position);
+			
+			if (event == null)
+				return view;
+			
+			TextView idTextView = (TextView) view.findViewById(R.id.item_id);
+			if (idTextView != null)
+				idTextView.setText(String.valueOf(event.getId()));
+			
+			TextView nameTextView = (TextView) view.findViewById(R.id.item_name);
+			if (nameTextView != null)
+				nameTextView.setText(event.getName());	
+			
+			return view;
+		}
 	}
 }

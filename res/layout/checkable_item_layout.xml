@@ -10,18 +10,20 @@
         android:clickable="false"
         android:layout_alignParentLeft="true" />
     <TextView
-        android:id="@+id/recipe_id"
-        android:focusable="false"
+        style="@style/FontStyle"
+        android:id="@+id/checkable_id"
+        android:focusable="false"        
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
         android:layout_toRightOf="@id/recipe_name"
-        android:visibility="gone" />
-    <TextView
-        android:id="@+id/recipe_name"
+        android:visibility="gone" /> 
+     <TextView
+        style="@style/FontStyle"
+        android:id="@+id/checkable_name"
         android:focusable="false"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
-        android:layout_toRightOf="@id/select_checkbox" />
+        android:layout_toRightOf="@id/select_checkbox" />      
 </com.fooding.views.CheckableRelativeLayout>
