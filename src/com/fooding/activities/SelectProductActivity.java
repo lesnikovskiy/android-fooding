@@ -61,7 +61,9 @@ public class SelectProductActivity extends Activity implements OnItemClickListen
 		
 		selectedProducts = new ArrayList<Product>();
 		
-		customAdapter = new CustomArrayAdapter(getApplicationContext(), R.layout.product_list_item, selectedProducts);
+		customAdapter = 
+				new CustomArrayAdapter(
+						getApplicationContext(), R.layout.product_list_item, selectedProducts);
 		selectedProductList.setAdapter(customAdapter);
 	
 		// init cursor
@@ -154,10 +156,6 @@ public class SelectProductActivity extends Activity implements OnItemClickListen
 				TextView nameTextView = (TextView) view.findViewById(R.id.checkable_product_name);
 				if (nameTextView != null) 
 					nameTextView.setText(product.getName());
-				
-				TextView priceTextView = (TextView) view.findViewById(R.id.checkable_product_price);
-				if (priceTextView != null)
-					nameTextView.setText(String.valueOf(product.getPrice()));
 			}
 			
 			return view;
@@ -210,22 +208,6 @@ public class SelectProductActivity extends Activity implements OnItemClickListen
 					(View) inflater.inflate(R.layout.autocomplete_item_layout, parent, false);
 			
 			bindView(view, context, cursor);
-			
-//			String id = cursor.getString(COLUMN_ID);
-//			String name = cursor.getString(COLUMN_NAME);
-//			String price = cursor.getString(COLUMN_PRICE);
-//			
-//			TextView idTextView = (TextView) view.findViewById(R.id.auto_product_id);
-//			if (idTextView != null)
-//				idTextView.setText(id);
-//			
-//			TextView nameTextView = (TextView) view.findViewById(R.id.auto_product_name);
-//			if (nameTextView != null)
-//				nameTextView.setText(name);
-//			
-//			TextView priceTextView = (TextView) view.findViewById(R.id.auto_product_price);
-//			if (price != null)
-//				priceTextView.setText(price);
 			
 			return view;
 		}
