@@ -19,14 +19,32 @@
         android:hint="@string/recipes_auto_select_product_hint" />
     
     <EditText
-        android:id="@+id/product_price"
+        android:id="@+id/product_quantity"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:hint="@string/recipes_enter_price_hint" />
+    
+    <Button
+        android:id="@+id/add_product_to_recipe_button"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/recipes_add_new_product_button_text" />
     
     <ListView 
         android:id="@+id/selected_products_list"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:choiceMode="multipleChoice" />
+    
+    <EditText
+        android:id="@+id/instructions_text"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:hint=""/>
+    
+    <Button
+        android:id="@+id/save_recipe_button"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/recipes_save_recipe" />
 </LinearLayout>

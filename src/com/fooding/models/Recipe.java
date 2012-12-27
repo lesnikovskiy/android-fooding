@@ -7,6 +7,7 @@ public class Recipe {
 	private String name;
 	private String instructions;
 	private List<Product> products;	
+	private int position;
 	
 	public Recipe(long id, String name) {
 		this.id = id;
@@ -54,4 +55,12 @@ public class Recipe {
 	public List<Product> getProducts() {
 		return this.products;
 	}	
+	
+	public int getPosition() {
+		return this.position;
+	}
+	
+	public void setPosition(int position) {
+		this.position = position;
+	}
 }

@@ -15,6 +15,7 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
+import android.widget.Button;
 import android.widget.CursorAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
@@ -31,9 +32,12 @@ public class SelectProductActivity extends Activity implements OnItemClickListen
 	static final private String RECIPE_ID_KEY = "recipeId";
 	
 	private TextView recipeIdTextView;
-	private EditText priceEditText;
+	private EditText quantityEditText;
 	private AutoCompleteTextView productNameAutocomplete;
 	private ListView selectedProductList;
+	private Button addProductButton;
+	private EditText instructionsEditText;
+	private Button saveRecipeButton;
 	
 	private ProductDbContract db;
 	private CustomCursorAdapter customCursor;
@@ -55,9 +59,12 @@ public class SelectProductActivity extends Activity implements OnItemClickListen
 		
 		recipeIdTextView = (TextView) findViewById(R.id.recipe_id);
 		recipeIdTextView.setText(String.valueOf(id));
-		priceEditText = (EditText) findViewById(R.id.product_price);
+		quantityEditText = (EditText) findViewById(R.id.product_quantity);
 		productNameAutocomplete = (AutoCompleteTextView) findViewById(R.id.select_product_autocomplete);
 		selectedProductList = (ListView) findViewById(R.id.selected_products_list);	
+		addProductButton = (Button) findViewById(R.id.add_product_to_recipe_button);
+		instructionsEditText = (EditText) findViewById(R.id.instructions_text);
+		saveRecipeButton = (Button) findViewById(R.id.save_recipe_button);
 		
 		selectedProducts = new ArrayList<Product>();
 		
@@ -95,7 +102,7 @@ public class SelectProductActivity extends Activity implements OnItemClickListen
 		
 		long _id = -1;
 		String name = null;
-		double price = -1;
+		String quantity = null;
 		
 		TextView idTextView = (TextView) view.findViewById(R.id.auto_product_id);
 		if (idTextView != null) {
@@ -110,13 +117,11 @@ public class SelectProductActivity extends Activity implements OnItemClickListen
 		
 		TextView priceTextView = (TextView) view.findViewById(R.id.auto_product_price);
 		if (priceTextView != null){
-			String p = priceTextView.getText().toString();
-			priceEditText.setText(p);
-			price = Double.parseDouble(p);
+			quantity = quantityEditText.getText().toString();
 		}
 		
 		if (id > 0 && name != null) {
-			customAdapter.add(new Product(_id, name, price));
+			customAdapter.add(new Product(_id, name, quantity));
 			customAdapter.notifyDataSetChanged();
 		}
 	}

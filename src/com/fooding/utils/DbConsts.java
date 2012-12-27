@@ -20,7 +20,7 @@ public abstract class DbConsts {
 		    "(id integer primary key autoincrement, name text not null, instructions text);";
 	static final public String CREATE_RECIPE_PRODUCTS_SQL = 
 			"create table " + RECIPES_PRODUCTS +
-			"(recipe_id integer not null, product_id integer not null);";
+			"(recipe_id integer not null, product_id integer not null, product_quantity text);";
 	
 	static final public String MIGRATE_PRODUCTS_SQL = 
 			String.format("drop table if exists %s;", PRODUCTS_TABLE);

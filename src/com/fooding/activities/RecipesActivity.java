@@ -74,11 +74,12 @@ public class RecipesActivity extends Activity {
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch(item.getItemId()) {
 		case DELETE_SELECTED_ITEM: 
-			List<Recipe> recipesToDelete = getSelectedRecipes(true);
+			List<Recipe> recipesToDelete = getSelectedRecipes();
 			for (Recipe r : recipesToDelete) {
 				if (r.getId() > 0) {
 					db.deleteRecipe(r.getId());					
-					adapter.remove(r);			
+					adapter.remove(r);	
+					recipesListView.setItemChecked(r.getPosition(), false);
 					
 					Log.d(TAG, String.format("Recipe deleted: [%s %s]", r.getId(), r.getName()));
 				} else {
@@ -89,7 +90,7 @@ public class RecipesActivity extends Activity {
 			adapter.notifyDataSetChanged();
 			break;
 		case CREATE_LIST_ITEM:
-			List<Recipe> selectedRecipes = getSelectedRecipes(false);	
+			List<Recipe> selectedRecipes = getSelectedRecipes();	
 			for (Recipe r : selectedRecipes) {
 				if (r.getId() > 0) {
 					Log.d(TAG, String.format("Recipe selected: [%s %s]", r.getId(), r.getName()));
@@ -109,16 +110,16 @@ public class RecipesActivity extends Activity {
 		super.onDestroy();
 	}
 	
-	private List<Recipe> getSelectedRecipes(boolean uncheckSelectedItems) {
+	private List<Recipe> getSelectedRecipes() {
 		List<Recipe> recipes = new ArrayList<Recipe>();
 		
 		final SparseBooleanArray checkedItems = recipesListView.getCheckedItemPositions();
 		for (int i = 0; i < checkedItems.size(); i++) {			
-			int position = checkedItems.keyAt(i);
-			// uncheck selected items
-			recipesListView.setItemChecked(position, !uncheckSelectedItems);
+			int position = checkedItems.keyAt(i);			
 			if (checkedItems.valueAt(i)) {
-				recipes.add(adapter.getItem(position));
+				Recipe recipe = adapter.getItem(position);
+				recipe.setPosition(position);
+				recipes.add(recipe);
 			}
 		}
 		
