@@ -17,12 +17,4 @@
     	android:layout_height="wrap_content"
     	android:layout_centerVertical="true"
     	android:layout_toRightOf="@id/auto_product_id" />
-    <TextView
-        style="@style/FontStyle"
-        android:id="@+id/auto_product_price"
-        android:layout_width="wrap_content"
-    	android:layout_height="wrap_content"
-    	android:layout_centerVertical="true"
-    	android:layout_toRightOf="@id/auto_product_name"
-    	android:visibility="gone" />
 </RelativeLayout>

@@ -8,7 +8,13 @@
         android:id="@+id/recipe_id"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:visibility="gone"/>
+        android:visibility="gone" />
+    
+    <TextView
+        android:id="@+id/selected_product_id"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone" />
     
     <AutoCompleteTextView 
         style="@style/FontStyle"
@@ -40,7 +46,7 @@
         android:id="@+id/instructions_text"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:hint=""/>
+        android:hint="@string/recipes_instructions_hint" />
     
     <Button
         android:id="@+id/save_recipe_button"

@@ -68,7 +68,7 @@ public class ProductsDbAdapter implements ProductDbContract {
 	}
 	
 	public Cursor getProductFindCursor(String args) {
-		String sqlQuery = "SELECT id _id, name, price FROM products WHERE name LIKE '%" + args + "%'";
+		String sqlQuery = "SELECT id _id, name FROM products WHERE name LIKE '%" + args + "%'";
 		Cursor c = database.rawQuery(sqlQuery, null);
 		
 		return c;

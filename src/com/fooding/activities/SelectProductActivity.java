@@ -7,9 +7,11 @@ import android.app.Activity;
 import android.content.Context;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
@@ -26,12 +28,13 @@ import com.fooding.adapters.ProductsDbAdapter;
 import com.fooding.contracts.ProductDbContract;
 import com.fooding.models.Product;
 
-public class SelectProductActivity extends Activity implements OnItemClickListener {
+public class SelectProductActivity extends Activity implements OnItemClickListener, OnClickListener {
 	static final private String TAG = "SelectProductActivity";
 	
 	static final private String RECIPE_ID_KEY = "recipeId";
 	
 	private TextView recipeIdTextView;
+	private TextView productIdTextView;
 	private EditText quantityEditText;
 	private AutoCompleteTextView productNameAutocomplete;
 	private ListView selectedProductList;
@@ -59,6 +62,8 @@ public class SelectProductActivity extends Activity implements OnItemClickListen
 		
 		recipeIdTextView = (TextView) findViewById(R.id.recipe_id);
 		recipeIdTextView.setText(String.valueOf(id));
+		
+		productIdTextView = (TextView) findViewById(R.id.selected_product_id);
 		quantityEditText = (EditText) findViewById(R.id.product_quantity);
 		productNameAutocomplete = (AutoCompleteTextView) findViewById(R.id.select_product_autocomplete);
 		selectedProductList = (ListView) findViewById(R.id.selected_products_list);	
@@ -70,7 +75,7 @@ public class SelectProductActivity extends Activity implements OnItemClickListen
 		
 		customAdapter = 
 				new CustomArrayAdapter(
-						getApplicationContext(), R.layout.product_list_item, selectedProducts);
+						getApplicationContext(), R.layout.select_product_item, selectedProducts);
 		selectedProductList.setAdapter(customAdapter);
 	
 		// init cursor
@@ -86,6 +91,7 @@ public class SelectProductActivity extends Activity implements OnItemClickListen
 		productNameAutocomplete.setAdapter(customCursor);
 		productNameAutocomplete.setThreshold(1);
 		productNameAutocomplete.setOnItemClickListener(this);
+		addProductButton.setOnClickListener(this);
 	}
 	
 	@Override
@@ -100,29 +106,36 @@ public class SelectProductActivity extends Activity implements OnItemClickListen
 	public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 		Log.d(TAG, "onItemClick triggered.");
 		
-		long _id = -1;
-		String name = null;
-		String quantity = null;
-		
 		TextView idTextView = (TextView) view.findViewById(R.id.auto_product_id);
 		if (idTextView != null) {
-			_id = Long.parseLong(idTextView.getText().toString());
+			productIdTextView.setText(idTextView.getText().toString());		
 		}
 		
 		TextView nameTextView = (TextView) view.findViewById(R.id.auto_product_name);
 		if (nameTextView != null) {
-			name = nameTextView.getText().toString();
-			productNameAutocomplete.setText(name);
+			productNameAutocomplete.setText(nameTextView.getText().toString());
 		}
-		
-		TextView priceTextView = (TextView) view.findViewById(R.id.auto_product_price);
-		if (priceTextView != null){
-			quantity = quantityEditText.getText().toString();
-		}
-		
-		if (id > 0 && name != null) {
-			customAdapter.add(new Product(_id, name, quantity));
-			customAdapter.notifyDataSetChanged();
+	}
+	
+	public void onClick(View v) {
+		switch(v.getId()) {
+		case R.id.add_product_to_recipe_button:
+			String id = productIdTextView.getText().toString();
+			long _id = -1;
+			if (!TextUtils.isEmpty(id) && TextUtils.isDigitsOnly(id))
+				_id = Long.parseLong(id);
+			
+			String name = productNameAutocomplete.getText().toString();
+			String quantity = quantityEditText.getText().toString();
+			if (_id > 0 && !TextUtils.isEmpty(name)) {
+				customAdapter.add(new Product(_id, name, quantity));
+				customAdapter.notifyDataSetChanged();
+				
+				productIdTextView.setText("");
+				productNameAutocomplete.setText("");
+				quantityEditText.setText("");
+			}
+			break;
 		}
 	}
 	
@@ -154,13 +167,18 @@ public class SelectProductActivity extends Activity implements OnItemClickListen
 			Product product = products.get(position);
 			
 			if (product != null) {
-				TextView idTextView = (TextView) view.findViewById(R.id.checkable_product_id);
+				TextView idTextView = (TextView) view.findViewById(R.id.checkable_selected_product_id);
 				if (idTextView != null)
 					idTextView.setText(String.valueOf(product.getId()));
 				
-				TextView nameTextView = (TextView) view.findViewById(R.id.checkable_product_name);
+				TextView nameTextView = (TextView) view.findViewById(R.id.checkable_selected_product_name);
 				if (nameTextView != null) 
 					nameTextView.setText(product.getName());
+				
+				TextView quantityTextView = 
+						(TextView) view.findViewById(R.id.checkable_selected_product_quantity);
+				if (quantityTextView != null)
+					quantityTextView.setText(product.getQuantity());
 			}
 			
 			return view;
@@ -191,7 +209,6 @@ public class SelectProductActivity extends Activity implements OnItemClickListen
 		public void bindView(View view, Context context, Cursor cursor) {
 			String id = cursor.getString(COLUMN_ID);
 			String name = cursor.getString(COLUMN_NAME);
-			String price = cursor.getString(COLUMN_PRICE);
 			
 			TextView idTextView = (TextView) view.findViewById(R.id.auto_product_id);
 			if (idTextView != null)
@@ -200,10 +217,6 @@ public class SelectProductActivity extends Activity implements OnItemClickListen
 			TextView nameTextView = (TextView) view.findViewById(R.id.auto_product_name);
 			if (nameTextView != null)
 				nameTextView.setText(name);
-			
-			TextView priceTextView = (TextView) view.findViewById(R.id.auto_product_price);
-			if (price != null)
-				priceTextView.setText(price);
 		}
 		
 		@Override
