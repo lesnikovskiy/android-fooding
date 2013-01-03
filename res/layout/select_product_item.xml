@@ -14,9 +14,8 @@
         android:id="@+id/checkable_selected_product_id"
         android:focusable="false"        
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerVertical="true"
-        android:layout_below="@id/checkable_selected_checkbox"
+        android:layout_height="wrap_content"       
+        android:layout_alignWithParentIfMissing="true"
         android:visibility="gone" />  
     <TextView
         style="@style/FontStyle"
@@ -25,7 +24,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
-        android:layout_toRightOf="@id/checkable_selected_product_id" />    
+        android:layout_toRightOf="@id/checkable_selected_checkbox" />    
     <TextView
         style="@style/FontStyle"
         android:id="@+id/checkable_selected_product_quantity"

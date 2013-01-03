@@ -12,4 +12,5 @@ public interface ProductDbContract extends DatabaseContract {
 	boolean insertProduct(Product product);
 	boolean updateProduct(Product product);
 	boolean deleteProduct(long productId);	
+	long getLastInsertId() throws IllegalArgumentException;
 }

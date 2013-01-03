@@ -111,4 +111,28 @@ public class ProductsDbAdapter implements ProductDbContract {
 		
 		return database.delete(PRODUCTS_TABLE, whereClause, null) > 0;
 	}
+	
+	private static final String SQLITE_SEQUENCE = "sqlite_sequence";
+	private static final String SELECTION = "name = ?";
+	private static final String SEQ_COLUMN = "seq";
+	
+	public long getLastInsertId() throws IllegalArgumentException {
+		long index = -1;
+		
+		SQLiteDatabase db = openHelper.getReadableDatabase();
+		if (db == null)
+			throw new NullPointerException("SQLiteDatabase is null. Override getDatabase() method correctly.");
+		
+		Cursor c = db.query(SQLITE_SEQUENCE, 
+				new String[] {SEQ_COLUMN}, 
+				SELECTION, 
+				new String[] {PRODUCTS_TABLE}, 
+				null, null, null);
+		
+		if (c.moveToFirst()) {
+			index = c.getLong(c.getColumnIndexOrThrow(SEQ_COLUMN));
+		}
+		
+		return index;
+	}
 }

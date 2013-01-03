@@ -32,8 +32,8 @@ public final class R {
         public static final int checkable_product_name=0x7f07001a;
         public static final int checkable_product_price=0x7f07001b;
         public static final int checkable_selected_checkbox=0x7f07001e;
-        public static final int checkable_selected_product_id=0x7f070020;
-        public static final int checkable_selected_product_name=0x7f07001f;
+        public static final int checkable_selected_product_id=0x7f07001f;
+        public static final int checkable_selected_product_name=0x7f070020;
         public static final int checkable_selected_product_quantity=0x7f070021;
         public static final int event_list_button=0x7f070017;
         public static final int event_name=0x7f070010;

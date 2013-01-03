@@ -90,8 +90,10 @@ public class SelectProductActivity extends Activity implements OnItemClickListen
 		// attach to adapter
 		productNameAutocomplete.setAdapter(customCursor);
 		productNameAutocomplete.setThreshold(1);
+		
 		productNameAutocomplete.setOnItemClickListener(this);
 		addProductButton.setOnClickListener(this);
+		saveRecipeButton.setOnClickListener(this);
 	}
 	
 	@Override
@@ -122,19 +124,33 @@ public class SelectProductActivity extends Activity implements OnItemClickListen
 		case R.id.add_product_to_recipe_button:
 			String id = productIdTextView.getText().toString();
 			long _id = -1;
-			if (!TextUtils.isEmpty(id) && TextUtils.isDigitsOnly(id))
+			if (!TextUtils.isEmpty(id) && TextUtils.isDigitsOnly(id)) {
 				_id = Long.parseLong(id);
+			}
 			
 			String name = productNameAutocomplete.getText().toString();
 			String quantity = quantityEditText.getText().toString();
 			if (_id > 0 && !TextUtils.isEmpty(name)) {
 				customAdapter.add(new Product(_id, name, quantity));
-				customAdapter.notifyDataSetChanged();
-				
-				productIdTextView.setText("");
-				productNameAutocomplete.setText("");
-				quantityEditText.setText("");
+				customAdapter.notifyDataSetChanged();				
+			} else {
+				db.insertProduct(new Product(name, 0.0));
+				long insertId = db.getLastInsertId();
+				if (insertId > 0) {
+					customAdapter.add(new Product(insertId, name, quantity));
+				} else {
+					Toast.makeText(getApplicationContext(), 
+							"Cannot add product! Something bad happened!", Toast.LENGTH_LONG).show();
+				}
 			}
+			
+			productIdTextView.setText("");
+			productNameAutocomplete.setText("");
+			quantityEditText.setText("");
+			
+			break;
+		case R.id.save_recipe_button:
+			// TODO: save recipe block
 			break;
 		}
 	}

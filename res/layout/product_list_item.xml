@@ -17,6 +17,7 @@
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
         android:layout_toRightOf="@id/select_product_checkbox"
+        android:layout_alignWithParentIfMissing="true"
         android:visibility="gone" />
     <TextView
         style="@style/FontStyle"
