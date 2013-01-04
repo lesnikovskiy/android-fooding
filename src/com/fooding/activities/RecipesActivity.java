@@ -98,15 +98,6 @@ public class RecipesActivity extends Activity {
 			for (int i = 0; i < selectedRecipes.size(); i++) {
 				selectedRIDs[i] = selectedRecipes.get(i).getId();
 			}
-//			for (Recipe r : selectedRecipes) {
-//				if (r.getId() > 0) {
-//					Log.d(TAG, String.format("Recipe selected: [%s %s]", r.getId(), r.getName()));
-//					
-//					selectedRIDs.add(r.getId());
-//				} else {
-//					Log.e(TAG, String.format("Recipe id = %s", r.getId()));
-//				}
-//			}
 			
 			if (selectedRIDs.length > 0) {
 				Intent intent = new Intent(getApplicationContext(), PurchaseListAcitivity.class);

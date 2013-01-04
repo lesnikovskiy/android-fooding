@@ -52,6 +52,12 @@ public class PurchaseListAcitivity extends Activity {
 		purchaseListView.setAdapter(adapter);
 	}
 	
+	@Override
+	protected void onDestroy() {
+		super.onDestroy();
+		db.close();
+	}
+	
 	private class CustomArrayAdapter extends ArrayAdapter<Product> {
 		private Context context;
 		private int resourceId;
@@ -88,8 +94,9 @@ public class PurchaseListAcitivity extends Activity {
 					nameTextView.setText(product.getName());
 				
 				TextView qtyTextView = (TextView) view.findViewById(R.id.checkable_selected_product_quantity);
-				if (qtyTextView != null)
+				if (qtyTextView != null) {
 					qtyTextView.setText(product.getQuantity());
+				}
 			}
 			
 			return view;
