@@ -9,6 +9,11 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:visibility="gone" />
+    <TextView
+        android:id="@+id/recipe_name_viewstate"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone" />
     
     <TextView
         android:id="@+id/selected_product_id"

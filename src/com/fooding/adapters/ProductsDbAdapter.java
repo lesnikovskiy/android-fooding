@@ -18,6 +18,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
+import android.text.TextUtils;
 import android.util.Log;
 
 import com.fooding.contracts.ProductDbContract;
@@ -61,6 +62,31 @@ public class ProductsDbAdapter implements ProductDbContract {
 				double price = c.getDouble(COLUMN_PRICE);
 				
 				products.add(new Product(productId, name, price));
+			} while (c.moveToNext());
+		}
+		
+		return products;
+	}
+	
+	public List<Product> getProductsByRecipes(long[] recipeIds) {
+		List<Product> products = new ArrayList<Product>();
+		List<String> stringIds = new ArrayList<String>();
+		for (long id : recipeIds)
+			stringIds.add(String.valueOf(id));
+		
+		String sql = String.format("select p.id _id, p.name, rp.product_quantity from products p " 
+				+ "inner join recipe_products rp on rp.product_id = p.id " 
+				+ "where rp.recipe_id in (%s)"
+				+ "order by p.name;", TextUtils.join(",", stringIds));
+		
+		Cursor c = database.rawQuery(sql, null);
+		if (c.moveToFirst()) {
+			do {
+				long id = c.getLong(0);
+				String name = c.getString(1);
+				String qty = c.getString(2);
+				
+				products.add(new Product(id, name, qty));
 			} while (c.moveToNext());
 		}
 		

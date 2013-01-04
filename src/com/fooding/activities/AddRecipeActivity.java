@@ -16,6 +16,7 @@ import com.fooding.models.Recipe;
 public class AddRecipeActivity extends Activity implements OnClickListener {
 	static final private String TAG = "AddRecipeActivity";	
 	static final private String RECIPE_ID_KEY = "recipeId";
+	static final private String RECIPE_NAME_KEY = "recipeName";
 	
 	private EditText recipeNameText;
 	private RecipesContract db;
@@ -49,6 +50,7 @@ public class AddRecipeActivity extends Activity implements OnClickListener {
 			
 			Intent intent = new Intent(getApplicationContext(), SelectProductActivity.class);
 			intent.putExtra(RECIPE_ID_KEY, recipeId);
+			intent.putExtra(RECIPE_NAME_KEY, recipeName);
 			startActivity(intent);
 			
 			break;

@@ -13,5 +13,5 @@ public interface RecipesContract extends DatabaseContract {
 	boolean deleteRecipe(long recipeId);
 	
 	int deleteRecipeBundle(String[] recipeIds);
-	boolean addProductToRecipe(long productId, long recipeId);	
+	boolean addProductToRecipe(long productId, long recipeId, String qty);	
 }

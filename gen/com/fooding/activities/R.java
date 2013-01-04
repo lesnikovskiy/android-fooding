@@ -21,7 +21,7 @@ public final class R {
     }
     public static final class id {
         public static final int addProductButton=0x7f07000a;
-        public static final int add_product_to_recipe_button=0x7f070026;
+        public static final int add_product_to_recipe_button=0x7f070028;
         public static final int auto_product_id=0x7f070002;
         public static final int auto_product_name=0x7f070003;
         public static final int available_products_button=0x7f070016;
@@ -31,39 +31,41 @@ public final class R {
         public static final int checkable_product_id=0x7f070019;
         public static final int checkable_product_name=0x7f07001a;
         public static final int checkable_product_price=0x7f07001b;
-        public static final int checkable_selected_checkbox=0x7f07001e;
-        public static final int checkable_selected_product_id=0x7f07001f;
-        public static final int checkable_selected_product_name=0x7f070020;
-        public static final int checkable_selected_product_quantity=0x7f070021;
+        public static final int checkable_selected_checkbox=0x7f07001f;
+        public static final int checkable_selected_product_id=0x7f070020;
+        public static final int checkable_selected_product_name=0x7f070021;
+        public static final int checkable_selected_product_quantity=0x7f070022;
         public static final int event_list_button=0x7f070017;
         public static final int event_name=0x7f070010;
         public static final int events_date_picker=0x7f070011;
-        public static final int instructions_text=0x7f070028;
+        public static final int instructions_text=0x7f07002a;
         public static final int item_id=0x7f07000e;
         public static final int item_name=0x7f07000f;
         public static final int main_table_layout=0x7f070013;
-        public static final int menu_new_product=0x7f07002a;
-        public static final int menu_settings=0x7f07002b;
+        public static final int menu_new_product=0x7f07002c;
+        public static final int menu_settings=0x7f07002d;
         public static final int next_button=0x7f070001;
         public static final int product_id=0x7f070007;
         public static final int product_name=0x7f070008;
         public static final int product_price=0x7f070009;
-        public static final int product_quantity=0x7f070025;
+        public static final int product_quantity=0x7f070027;
         public static final int products=0x7f07001c;
         public static final int purchase_list_button=0x7f070014;
-        public static final int recipe_id=0x7f070022;
+        public static final int purchase_list_view=0x7f07001d;
+        public static final int recipe_id=0x7f070023;
         public static final int recipe_name=0x7f070000;
+        public static final int recipe_name_viewstate=0x7f070024;
         public static final int recipes_button=0x7f070015;
-        public static final int recipes_list_view=0x7f07001d;
+        public static final int recipes_list_view=0x7f07001e;
         public static final int removeProductButton=0x7f07000c;
         public static final int saveProductButton=0x7f07000b;
         public static final int save_event_button=0x7f070012;
-        public static final int save_recipe_button=0x7f070029;
+        public static final int save_recipe_button=0x7f07002b;
         public static final int select_checkbox=0x7f070004;
-        public static final int select_product_autocomplete=0x7f070024;
+        public static final int select_product_autocomplete=0x7f070026;
         public static final int select_product_checkbox=0x7f070018;
-        public static final int selected_product_id=0x7f070023;
-        public static final int selected_products_list=0x7f070027;
+        public static final int selected_product_id=0x7f070025;
+        public static final int selected_products_list=0x7f070029;
     }
     public static final class layout {
         public static final int add_recipe_layout=0x7f030000;
@@ -75,9 +77,10 @@ public final class R {
         public static final int main_layout=0x7f030006;
         public static final int product_list_item=0x7f030007;
         public static final int products_layout=0x7f030008;
-        public static final int recipes_layout=0x7f030009;
-        public static final int select_product_item=0x7f03000a;
-        public static final int select_product_layout=0x7f03000b;
+        public static final int purchase_list_layout=0x7f030009;
+        public static final int recipes_layout=0x7f03000a;
+        public static final int select_product_item=0x7f03000b;
+        public static final int select_product_layout=0x7f03000c;
     }
     public static final class menu {
         public static final int products=0x7f060000;
@@ -106,6 +109,7 @@ public final class R {
         public static final int product_price_hint=0x7f04000d;
         public static final int product_price_label=0x7f04000b;
         public static final int products_title=0x7f040008;
+        public static final int purchase_activity_label=0x7f040028;
         public static final int recipes_activity_title=0x7f040019;
         public static final int recipes_add_new_product_button_text=0x7f040024;
         public static final int recipes_add_recipe_activity_title=0x7f040020;

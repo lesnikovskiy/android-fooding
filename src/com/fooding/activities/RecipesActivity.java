@@ -17,6 +17,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.fooding.adapters.RecipeDbAdapter;
 import com.fooding.contracts.RecipesContract;
@@ -31,6 +32,8 @@ public class RecipesActivity extends Activity {
 	static final private int EDIT_RECIPE_ITEM = 110;
 	static final private int DELETE_SELECTED_ITEM = 120;
 	static final private int CREATE_LIST_ITEM = 130;
+	
+	static final private String SELECTED_RECIPES_KEY = "selectedRIDs";
 	
 	private RecipesContract db;
 	private ListView recipesListView;
@@ -83,7 +86,7 @@ public class RecipesActivity extends Activity {
 					
 					Log.d(TAG, String.format("Recipe deleted: [%s %s]", r.getId(), r.getName()));
 				} else {
-					Log.e(TAG, String.format("Recipe id = %s", r.getId()));
+					Log.e(TAG, String.format("Recipe id = %s was not deleted", r.getId()));
 				}
 			}
 			
@@ -91,13 +94,28 @@ public class RecipesActivity extends Activity {
 			break;
 		case CREATE_LIST_ITEM:
 			List<Recipe> selectedRecipes = getSelectedRecipes();	
-			for (Recipe r : selectedRecipes) {
-				if (r.getId() > 0) {
-					Log.d(TAG, String.format("Recipe selected: [%s %s]", r.getId(), r.getName()));
-				} else {
-					Log.e(TAG, String.format("Recipe id = %s", r.getId()));
-				}
+			long[] selectedRIDs = new long [selectedRecipes.size()];
+			for (int i = 0; i < selectedRecipes.size(); i++) {
+				selectedRIDs[i] = selectedRecipes.get(i).getId();
 			}
+//			for (Recipe r : selectedRecipes) {
+//				if (r.getId() > 0) {
+//					Log.d(TAG, String.format("Recipe selected: [%s %s]", r.getId(), r.getName()));
+//					
+//					selectedRIDs.add(r.getId());
+//				} else {
+//					Log.e(TAG, String.format("Recipe id = %s", r.getId()));
+//				}
+//			}
+			
+			if (selectedRIDs.length > 0) {
+				Intent intent = new Intent(getApplicationContext(), PurchaseListAcitivity.class);
+				intent.putExtra(SELECTED_RECIPES_KEY, selectedRIDs);
+				startActivity(intent);
+			} else {
+				Toast.makeText(getApplicationContext(), "No items selected", Toast.LENGTH_LONG).show();
+			}
+			
 			return true;
 		}
 		

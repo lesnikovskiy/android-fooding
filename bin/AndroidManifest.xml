@@ -46,6 +46,9 @@
         <activity
             android:name=".SelectProductActivity"
             android:label="@string/select_product_activity_label" />
+        <activity
+            android:name=".PurchaseListAcitivity"
+            android:label="@string/purchase_activity_label" />
     </application>
 
 </manifest>

@@ -25,15 +25,20 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.fooding.adapters.ProductsDbAdapter;
+import com.fooding.adapters.RecipeDbAdapter;
 import com.fooding.contracts.ProductDbContract;
+import com.fooding.contracts.RecipesContract;
 import com.fooding.models.Product;
+import com.fooding.models.Recipe;
 
 public class SelectProductActivity extends Activity implements OnItemClickListener, OnClickListener {
 	static final private String TAG = "SelectProductActivity";
 	
 	static final private String RECIPE_ID_KEY = "recipeId";
+	static final private String RECIPE_NAME_KEY = "recipeName";
 	
 	private TextView recipeIdTextView;
+	private TextView recipeNameTextView;
 	private TextView productIdTextView;
 	private EditText quantityEditText;
 	private AutoCompleteTextView productNameAutocomplete;
@@ -55,6 +60,7 @@ public class SelectProductActivity extends Activity implements OnItemClickListen
 		setContentView(R.layout.select_product_layout);
 		
 		long id = getIntent().getExtras().getLong(RECIPE_ID_KEY, -1);
+		String recipeName = getIntent().getExtras().getString(RECIPE_NAME_KEY);
 		if (id == -1) {
 			Toast.makeText(this, "recipe id -1", Toast.LENGTH_LONG).show();
 			finish();
@@ -62,6 +68,8 @@ public class SelectProductActivity extends Activity implements OnItemClickListen
 		
 		recipeIdTextView = (TextView) findViewById(R.id.recipe_id);
 		recipeIdTextView.setText(String.valueOf(id));
+		recipeNameTextView = (TextView) findViewById(R.id.recipe_name_viewstate);
+		recipeNameTextView.setText(recipeName);
 		
 		productIdTextView = (TextView) findViewById(R.id.selected_product_id);
 		quantityEditText = (EditText) findViewById(R.id.product_quantity);
@@ -150,7 +158,48 @@ public class SelectProductActivity extends Activity implements OnItemClickListen
 			
 			break;
 		case R.id.save_recipe_button:
-			// TODO: save recipe block
+			long recipeID = Long.parseLong(recipeIdTextView.getText().toString());
+			String recipeName = recipeNameTextView.getText().toString();
+			String instructions = instructionsEditText.getText().toString();
+			
+			RecipesContract recipesDB = new RecipeDbAdapter(getApplicationContext());
+			recipesDB.open();
+			
+			boolean isUpdated = recipesDB.updateRecipe(new Recipe(recipeID, recipeName, instructions));
+			if (isUpdated)
+				Log.d(TAG, "Recipe successfully updated");
+			
+			for (int i = 0; i < selectedProductList.getChildCount(); i++) {
+				View childView = selectedProductList.getChildAt(i);
+				
+				long prdId = -1;
+				String prdName = "";
+				String prdQty = "";
+				
+				TextView prodIdTV = 
+						(TextView) childView.findViewById(R.id.checkable_selected_product_id);
+				if (prodIdTV != null)
+					prdId = Long.parseLong(prodIdTV.getText().toString());
+				
+				TextView prodNameTV =
+						(TextView) childView.findViewById(R.id.checkable_selected_product_name);
+				if (prodNameTV != null)
+					prdName = prodNameTV.getText().toString();
+				
+				TextView prodQntyTV =
+						(TextView) childView.findViewById(R.id.checkable_selected_product_quantity);
+				if (prodQntyTV != null)
+					prdQty = prodQntyTV.getText().toString();
+				
+				Log.d(TAG, String.format("At position %s: %s %s %s", i, prdId, prdName, prdQty));
+				
+				boolean isInserted = recipesDB.addProductToRecipe(prdId, recipeID, prdQty);
+				
+				Log.d(TAG, String.format("Product insert status successful: %s", isInserted));			
+			}
+			
+			recipesDB.close();
+			Toast.makeText(getApplicationContext(), "Recipe successfully saved", Toast.LENGTH_LONG).show();
 			break;
 		}
 	}
@@ -206,7 +255,6 @@ public class SelectProductActivity extends Activity implements OnItemClickListen
 		
 		static final private int COLUMN_ID = 0;
 		static final private int COLUMN_NAME = 1;
-		static final private int COLUMN_PRICE = 2;
 		
 		private ProductDbContract db = null;
 		

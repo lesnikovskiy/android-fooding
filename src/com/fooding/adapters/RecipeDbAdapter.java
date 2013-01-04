@@ -13,6 +13,7 @@ import static com.fooding.utils.RecipeConsts.COLUMN_P_ID;
 import static com.fooding.utils.RecipeConsts.COLUMN_P_NAME;
 import static com.fooding.utils.RecipeConsts.COLUMN_P_PRICE;
 import static com.fooding.utils.RecipeConsts.PRODUCT_ID;
+import static com.fooding.utils.RecipeConsts.PRODUCT_QUANTITY;
 import static com.fooding.utils.RecipeConsts.P_ID;
 import static com.fooding.utils.RecipeConsts.P_NAME;
 import static com.fooding.utils.RecipeConsts.P_PRICE;
@@ -181,10 +182,11 @@ public class RecipeDbAdapter implements RecipesContract {
 		return c.getInt(0);
 	}
 
-	public boolean addProductToRecipe(long productId, long recipeId) {
+	public boolean addProductToRecipe(long productId, long recipeId, String qty) {
 		ContentValues values = new ContentValues();
 		values.put(RECIPE_ID, recipeId);
 		values.put(PRODUCT_ID, productId);
+		values.put(PRODUCT_QUANTITY, qty);
 		
 		return db.insert(RECIPES_PRODUCTS, null, values) > 0;
 	}

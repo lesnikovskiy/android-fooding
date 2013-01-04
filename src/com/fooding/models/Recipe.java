@@ -19,6 +19,12 @@ public class Recipe {
 		this.instructions = instructions;
 	}
 	
+	public Recipe(long id, String name, String instructions) {
+		this.id = id;
+		this.name = name;
+		this.instructions = instructions;
+	}
+	
 	public Recipe(String name, String instructions, List<Product> products) {
 		this.name = name;
 		this.instructions = instructions;
