@@ -38,12 +38,11 @@ public final class R {
         public static final int event_list_button=0x7f070017;
         public static final int event_name=0x7f070010;
         public static final int events_date_picker=0x7f070011;
-        public static final int instructions_text=0x7f07002a;
         public static final int item_id=0x7f07000e;
         public static final int item_name=0x7f07000f;
         public static final int main_table_layout=0x7f070013;
-        public static final int menu_new_product=0x7f07002c;
-        public static final int menu_settings=0x7f07002d;
+        public static final int menu_new_product=0x7f07002a;
+        public static final int menu_settings=0x7f07002b;
         public static final int next_button=0x7f070001;
         public static final int product_id=0x7f070007;
         public static final int product_name=0x7f070008;
@@ -60,7 +59,6 @@ public final class R {
         public static final int removeProductButton=0x7f07000c;
         public static final int saveProductButton=0x7f07000b;
         public static final int save_event_button=0x7f070012;
-        public static final int save_recipe_button=0x7f07002b;
         public static final int select_checkbox=0x7f070004;
         public static final int select_product_autocomplete=0x7f070026;
         public static final int select_product_checkbox=0x7f070018;
