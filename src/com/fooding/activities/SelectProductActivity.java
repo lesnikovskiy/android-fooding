@@ -5,6 +5,7 @@ import java.util.List;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -35,6 +36,7 @@ public class SelectProductActivity extends Activity implements OnItemClickListen
 	
 	static final private String RECIPE_ID_KEY = "recipeId";
 	static final private String RECIPE_NAME_KEY = "recipeName";
+	static final private String RECIPE_ID_NEXT = "recipe_id";
 	
 	private TextView recipeIdTextView;
 	private TextView recipeNameTextView;
@@ -43,6 +45,7 @@ public class SelectProductActivity extends Activity implements OnItemClickListen
 	private AutoCompleteTextView productNameAutocomplete;
 	private ListView selectedProductList;
 	private Button addProductButton;
+	private Button nextButton;
 	
 	private ProductDbContract db;
 	private RecipesContract recipesDB;
@@ -74,6 +77,7 @@ public class SelectProductActivity extends Activity implements OnItemClickListen
 		productNameAutocomplete = (AutoCompleteTextView) findViewById(R.id.select_product_autocomplete);
 		selectedProductList = (ListView) findViewById(R.id.selected_products_list);	
 		addProductButton = (Button) findViewById(R.id.add_product_to_recipe_button);
+		nextButton = (Button) findViewById(R.id.next_to_instructions_button);
 		
 		selectedProducts = new ArrayList<Product>();
 		
@@ -100,6 +104,7 @@ public class SelectProductActivity extends Activity implements OnItemClickListen
 		
 		productNameAutocomplete.setOnItemClickListener(this);
 		addProductButton.setOnClickListener(this);
+		nextButton.setOnClickListener(this);
 	}
 	
 	@Override
@@ -161,6 +166,11 @@ public class SelectProductActivity extends Activity implements OnItemClickListen
 			productNameAutocomplete.setText("");
 			quantityEditText.setText("");
 			
+			break;
+		case R.id.next_to_instructions_button:
+			Intent intent = new Intent(getApplicationContext(), InstructionsActivity.class);
+			intent.putExtra(RECIPE_ID_NEXT, recipeIdTextView.getText().toString());
+			startActivity(intent);
 			break;
 		}
 	}

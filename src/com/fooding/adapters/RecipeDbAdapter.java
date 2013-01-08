@@ -131,6 +131,24 @@ public class RecipeDbAdapter implements RecipesContract {
 		
 		return recipes;
 	}
+	
+	public Recipe getById(long id) {
+		Recipe recipe = null;
+		
+		Cursor c = db.query(RECIPES_TABLE, 
+				new String[] {R_ID, R_NAME, R_INSTRUCTIONS}, 
+				"id = ?", new String[] {String.valueOf(id)}, null, null, null);
+		
+		if (c.moveToFirst()) {
+			long _id = c.getLong(COLUMN_ID);
+			String name = c.getString(COLUMN_NAME);
+			String instructions = c.getString(COLUMN_INSTRUCTIONS);
+			
+			recipe = new Recipe(_id, name, instructions);
+		}
+		
+		return recipe;
+	}
 
 	public boolean insertRecipe(Recipe recipe) {
 		ContentValues values = new ContentValues();

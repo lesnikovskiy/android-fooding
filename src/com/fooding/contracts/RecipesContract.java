@@ -8,6 +8,7 @@ public interface RecipesContract extends DatabaseContract {
 	List<Recipe> getRecipes();
 	List<Recipe> getJoinRecipes();
 	boolean insertRecipe(Recipe recipe);
+	Recipe getById(long id);
 	long getLastInsertId();
 	boolean updateRecipe(Recipe recipe);	
 	boolean deleteRecipe(long recipeId);

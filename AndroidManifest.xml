@@ -49,6 +49,9 @@
         <activity
             android:name=".PurchaseListAcitivity"
             android:label="@string/purchase_activity_label" />
+        <activity
+            android:name=".InstructionsActivity"
+            android:label="@string/recipes_instructions_activity_label" />
     </application>
 
 </manifest>

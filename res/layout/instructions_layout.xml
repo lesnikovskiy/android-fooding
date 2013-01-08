@@ -1,0 +1,33 @@
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical">
+    <TextView
+        android:id="@+id/recipe_id_for_instructions"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone" />    
+    <EditText
+        android:id="@+id/instructions_edit_text"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/recipes_instructions_hint" />
+    <LinearLayout
+        android:layout_width="fill_parent"
+   		android:layout_height="fill_parent"
+   		android:orientation="horizontal">
+        <Button 
+            android:id="@+id/instructions_save_button" 
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/recipes_instructions_save_button"
+            android:layout_weight="1" />
+        <Button
+            android:id="@+id/instructions_go_to_recipes_button"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/recipes_go_to_recipes_text"
+            android:layout_weight="1" />
+    </LinearLayout>
+</LinearLayout>

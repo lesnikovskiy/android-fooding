@@ -34,11 +34,23 @@
         android:layout_height="wrap_content"
         android:hint="@string/recipes_enter_price_hint" />
     
-    <Button
-        android:id="@+id/add_product_to_recipe_button"
+    <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:text="@string/recipes_add_new_product_button_text" />
+        android:orientation="horizontal">
+        <Button
+	        android:id="@+id/add_product_to_recipe_button"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:text="@string/recipes_add_new_product_button_text"
+	        android:layout_weight="1" />
+        <Button
+            android:id="@+id/next_to_instructions_button"
+            android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+            android:text="@string/recipes_next_to_instructions_text"
+            android:layout_weight="1" />
+    </LinearLayout> 
     
     <ListView
         android:id="@+id/selected_products_list"

@@ -34,6 +34,8 @@ public class RecipesActivity extends Activity {
 	static final private int CREATE_LIST_ITEM = 130;
 	
 	static final private String SELECTED_RECIPES_KEY = "selectedRIDs";
+	static final private String RECIPE_ID = "recipe_id";
+	static final private String RECIPE_NAME = "recipe_name";
 	
 	private RecipesContract db;
 	private ListView recipesListView;
@@ -64,11 +66,20 @@ public class RecipesActivity extends Activity {
 	public boolean onCreateOptionsMenu(Menu menu) {	
 		menu.add(DEFAULT_GROUP, ADD_RECIPE_ITEM, Menu.NONE, R.string.recipes_add_recipe_menu_item)
 			.setShortcut('0', 'a')
+			.setIcon(R.drawable.new_mdpi)
 			.setIntent(new Intent(getApplicationContext(), AddRecipeActivity.class));
 		
-		menu.add(DEFAULT_GROUP, EDIT_RECIPE_ITEM, Menu.NONE, R.string.recipes_edit_recipe_menu_item);
-		menu.add(DEFAULT_GROUP, DELETE_SELECTED_ITEM, Menu.NONE, R.string.recipes_delete_selected_menu_item);		
-		menu.add(DEFAULT_GROUP, CREATE_LIST_ITEM, Menu.NONE, R.string.recipes_create_list_menu_item).setShortcut('1', 'c');
+		menu.add(DEFAULT_GROUP, EDIT_RECIPE_ITEM, Menu.NONE, R.string.recipes_edit_recipe_menu_item)
+			.setIcon(R.drawable.edit_mdpi)
+			.setShortcut('2', 'e');
+		
+		menu.add(DEFAULT_GROUP, DELETE_SELECTED_ITEM, Menu.NONE, R.string.recipes_delete_selected_menu_item)
+			.setIcon(R.drawable.delete_mdpi)
+			.setShortcut('3', 'd');		
+		
+		menu.add(DEFAULT_GROUP, CREATE_LIST_ITEM, Menu.NONE, R.string.recipes_create_list_menu_item)
+			.setIcon(R.drawable.search_mdpi)
+			.setShortcut('1', 'c');
 		
 		return super.onCreateOptionsMenu(menu);
 	}
@@ -76,6 +87,19 @@ public class RecipesActivity extends Activity {
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch(item.getItemId()) {
+		case EDIT_RECIPE_ITEM:
+			List<Recipe> selectedRecipesForEdit = getSelectedRecipes();
+			if (selectedRecipesForEdit.size() > 0) {
+				Recipe recipe = selectedRecipesForEdit.get(0);
+				Intent intent = new Intent(getApplicationContext(), AddRecipeActivity.class);
+				intent.putExtra(RECIPE_ID, String.valueOf(recipe.getId()));
+				intent.putExtra(RECIPE_NAME, recipe.getName());
+				startActivity(intent);
+			} else {
+				Toast.makeText(getApplicationContext(), "No recipes selected", Toast.LENGTH_LONG)
+					.show();
+			}
+			break;
 		case DELETE_SELECTED_ITEM: 
 			List<Recipe> recipesToDelete = getSelectedRecipes();
 			for (Recipe r : recipesToDelete) {
