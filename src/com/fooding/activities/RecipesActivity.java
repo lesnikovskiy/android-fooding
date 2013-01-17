@@ -35,7 +35,6 @@ public class RecipesActivity extends Activity {
 	
 	static final private String SELECTED_RECIPES_KEY = "selectedRIDs";
 	static final private String RECIPE_ID = "recipe_id";
-	static final private String RECIPE_NAME = "recipe_name";
 	
 	private RecipesContract db;
 	private ListView recipesListView;
@@ -93,7 +92,6 @@ public class RecipesActivity extends Activity {
 				Recipe recipe = selectedRecipesForEdit.get(0);
 				Intent intent = new Intent(getApplicationContext(), AddRecipeActivity.class);
 				intent.putExtra(RECIPE_ID, String.valueOf(recipe.getId()));
-				intent.putExtra(RECIPE_NAME, recipe.getName());
 				startActivity(intent);
 			} else {
 				Toast.makeText(getApplicationContext(), "No recipes selected", Toast.LENGTH_LONG)

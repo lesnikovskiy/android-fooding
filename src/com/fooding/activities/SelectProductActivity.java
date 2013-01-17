@@ -30,12 +30,12 @@ import com.fooding.adapters.RecipeDbAdapter;
 import com.fooding.contracts.ProductDbContract;
 import com.fooding.contracts.RecipesContract;
 import com.fooding.models.Product;
+import com.fooding.models.Recipe;
 
 public class SelectProductActivity extends Activity implements OnItemClickListener, OnClickListener {
 	static final private String TAG = "SelectProductActivity";
 	
 	static final private String RECIPE_ID_KEY = "recipeId";
-	static final private String RECIPE_NAME_KEY = "recipeName";
 	static final private String RECIPE_ID_NEXT = "recipe_id";
 	
 	private TextView recipeIdTextView;
@@ -54,6 +54,7 @@ public class SelectProductActivity extends Activity implements OnItemClickListen
 	private CustomArrayAdapter customAdapter;
 	
 	private List<Product> selectedProducts;
+	private Recipe currentRecipe;
 		
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -61,16 +62,26 @@ public class SelectProductActivity extends Activity implements OnItemClickListen
 		setContentView(R.layout.select_product_layout);
 		
 		long id = getIntent().getExtras().getLong(RECIPE_ID_KEY, -1);
-		String recipeName = getIntent().getExtras().getString(RECIPE_NAME_KEY);
-		if (id == -1) {
-			Toast.makeText(this, "recipe id -1", Toast.LENGTH_LONG).show();
+		
+		try {
+			recipesDB = new RecipeDbAdapter(getApplicationContext());		
+			recipesDB.open();
+		} catch (Exception e) {
+			Log.e(TAG, String.format("Error occurred: %s", e.getMessage()));
+		}
+		
+		currentRecipe = recipesDB.getById(id);
+		
+		//String recipeName = getIntent().getExtras().getString(RECIPE_NAME_KEY);
+		if (currentRecipe == null) {
+			Toast.makeText(this, "Recipe not found", Toast.LENGTH_LONG).show();
 			finish();
 		}
 		
 		recipeIdTextView = (TextView) findViewById(R.id.recipe_id);
 		recipeIdTextView.setText(String.valueOf(id));
 		recipeNameTextView = (TextView) findViewById(R.id.recipe_name_viewstate);
-		recipeNameTextView.setText(recipeName);
+		recipeNameTextView.setText(currentRecipe.getName());
 		
 		productIdTextView = (TextView) findViewById(R.id.selected_product_id);
 		quantityEditText = (EditText) findViewById(R.id.product_quantity);
@@ -89,14 +100,22 @@ public class SelectProductActivity extends Activity implements OnItemClickListen
 		// init cursor
 		db = new ProductsDbAdapter(this);
 		db.open();
-		cursor = db.getProductFindCursor("");	
 		
+		// get available products
+		List<Product> insertedProducts = db.getProductsByRecipes(new long[] {id});
+		if (insertedProducts.size() > 0) {
+			for (Product p : insertedProducts) {
+				customAdapter.add(p);
+			}
+			customAdapter.notifyDataSetChanged();
+		}
+		
+		cursor = db.getProductFindCursor("");		
 		startManagingCursor(cursor);	
 		
 		customCursor = new CustomCursorAdapter(getApplicationContext(), cursor);
 		
-		recipesDB = new RecipeDbAdapter(getApplicationContext());
-		recipesDB.open();
+		
 		
 		// attach to adapter
 		productNameAutocomplete.setAdapter(customCursor);
@@ -169,7 +188,7 @@ public class SelectProductActivity extends Activity implements OnItemClickListen
 			break;
 		case R.id.next_to_instructions_button:
 			Intent intent = new Intent(getApplicationContext(), InstructionsActivity.class);
-			intent.putExtra(RECIPE_ID_NEXT, recipeIdTextView.getText().toString());
+			intent.putExtra(RECIPE_ID_NEXT, currentRecipe.getId());
 			startActivity(intent);
 			break;
 		}
